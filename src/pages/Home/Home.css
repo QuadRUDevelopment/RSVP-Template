@@ -467,26 +467,31 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
+  flex-shrink: 0;
 }
 
 .timeline-container .p-timeline-event-content {
   width: 45%;
-  position: relative;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /* Position left events (1st, 3rd, 5th...) on the left side of center line */
 .timeline-container .p-timeline-event:nth-child(odd) .p-timeline-event-content {
-  margin-right: auto;
-  margin-left: 0;
+  left: 0 !important;
+  right: auto !important;
+  text-align: left;
 }
 
 /* Position right events (2nd, 4th, 6th...) on the right side of center line */
 .timeline-container .p-timeline-event:nth-child(even) .p-timeline-event-content {
-  margin-left: auto;
-  margin-right: 0;
+  right: 0 !important;
+  left: auto !important;
+  text-align: right;
 }
 
-/* Left side events (even indices: 0, 2, 4...) */
+/* Left side events (1st, 3rd, 5th...) */
 .timeline-event-left {
   display: flex;
   flex-direction: column;
@@ -497,7 +502,7 @@
   margin-left: 0;
 }
 
-/* Right side events (odd indices: 1, 3, 5...) */
+/* Right side events (2nd, 4th, 6th...) */
 .timeline-event-right {
   display: flex;
   flex-direction: column;
