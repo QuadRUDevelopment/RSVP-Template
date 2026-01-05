@@ -27,7 +27,7 @@ export const handler: Handler = async (event) => {
     };
   }
 
-  const auth = verifyAuth(event);
+  const auth = await verifySupabaseAuth(event);
   if (!auth.valid) {
     return {
       statusCode: 401,
@@ -75,8 +75,15 @@ export const handler: Handler = async (event) => {
         console.error('Error fetching custom fields:', error);
         return {
           statusCode: 500,
-          headers: corsHeaders,
-          body: JSON.stringify({ error: 'Failed to fetch custom fields' }),
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            error: 'Failed to fetch custom fields',
+            details: error.message,
+            hint: error.message?.includes('relation') ? 'The custom_rsvp_fields table may not exist. Please run the custom_rsvp_fields_schema.sql script in Supabase.' : undefined
+          }),
         };
       }
 
@@ -231,10 +238,17 @@ export const handler: Handler = async (event) => {
     };
   } catch (err: any) {
     console.error('Error in admin-custom-fields:', err);
+    console.error('Error stack:', err.stack);
     return {
       statusCode: 500,
-      headers: corsHeaders,
-      body: JSON.stringify({ error: err.message || 'Internal server error' }),
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        error: err.message || 'Internal server error',
+        details: err.stack || err.toString(),
+      }),
     };
   }
 };

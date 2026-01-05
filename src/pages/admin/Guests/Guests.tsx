@@ -96,6 +96,11 @@ export const Guests: React.FC = () => {
     const email = escapeHtml(editingGuest?.email);
     const phone = escapeHtml(editingGuest?.phone);
     const maxPlusOnes = editingGuest?.max_plus_ones || 0;
+    
+    // Get plus ones from RSVP
+    const rsvp = editingGuest?.rsvps?.[0];
+    const plusOnes = rsvp?.plus_ones || [];
+    const plusOnesCount = rsvp?.plus_ones_count || 0;
 
     const { value: formValues } = await Swal.fire({
       ...getSwalConfig(),
@@ -153,6 +158,16 @@ export const Guests: React.FC = () => {
         <input id="swal-email" class="swal2-custom-input" type="email" placeholder="email@example.com" value="${email}">
         <label for="swal-phone" style="display: block; font-weight: 500; color: #374151; font-size: 0.875rem; margin-top: 1rem; margin-bottom: 0.5rem;">Phone (Optional)</label>
         <input id="swal-phone" class="swal2-custom-input" type="tel" placeholder="+1234567890" value="${phone}">
+        ${editingGuest && plusOnesCount > 0 ? `
+          <div style="margin-top: 1.5rem; padding: 1rem; background: #f3f4f6; border-radius: 0.5rem;">
+            <label style="display: block; font-weight: 600; color: #374151; font-size: 0.875rem; margin-bottom: 0.75rem;">Plus Ones (${plusOnesCount})</label>
+            ${plusOnes.length > 0 ? plusOnes.map((po: any, idx: number) => `
+              <div style="margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 0.375rem; font-size: 0.875rem;">
+                <strong>${idx + 1}.</strong> ${escapeHtml(po.name || 'Unnamed')}
+              </div>
+            `).join('') : '<div style="font-size: 0.875rem; color: #6b7280;">No names provided</div>'}
+          </div>
+        ` : ''}
       `,
       showCancelButton: true,
       didOpen: () => {
@@ -585,7 +600,19 @@ export const Guests: React.FC = () => {
       sortable: true,
       render: (_value: any, row: any) => {
         const rsvp = row.rsvps?.[0];
-        return rsvp?.plus_ones_count || 0;
+        const plusOnes = rsvp?.plus_ones || [];
+        const count = rsvp?.plus_ones_count || 0;
+        
+        if (count === 0) {
+          return '0';
+        }
+        
+        // Show count and names
+        const names = plusOnes.map((po: any) => po.name).filter(Boolean);
+        if (names.length > 0) {
+          return `${count} - ${names.join(', ')}`;
+        }
+        return `${count} (no names)`;
       },
     },
   ];

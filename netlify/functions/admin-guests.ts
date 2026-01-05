@@ -72,7 +72,12 @@ export const handler: Handler = async (event) => {
             meal_choice_id,
             notes,
             submitted_at,
-            updated_at
+            updated_at,
+            plus_ones (
+              id,
+              name,
+              meal_choice_id
+            )
           )
         `)
         .eq('event_id', eventData.id)

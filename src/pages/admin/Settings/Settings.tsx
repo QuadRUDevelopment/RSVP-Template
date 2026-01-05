@@ -191,7 +191,7 @@ export const Settings: React.FC = () => {
             />
           </div>
           <div className="form-group">
-            <label>Our Story</label>
+            <label>Ons Storie</label>
             <textarea
               value={formData.story_text || ''}
               onChange={(e) => handleChange('story_text', e.target.value)}
@@ -505,10 +505,10 @@ export const Settings: React.FC = () => {
             const section = formData.section_backgrounds?.[sectionKey] || {};
             const sectionNames: Record<string, string> = {
               banner: 'Banner Section',
-              story: 'Story Section',
-              venue: 'Venue Section',
-              schedule: 'Schedule Section',
-              rsvp: 'RSVP Section',
+              story: 'Storie Afdeling',
+              venue: 'Plek Afdeling',
+              schedule: 'Skedule Afdeling',
+              rsvp: 'RSVP Afdeling',
             };
 
             return (

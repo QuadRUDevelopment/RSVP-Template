@@ -213,7 +213,7 @@ export const Home: React.FC = () => {
             {/* Story text on right */}
             {event?.story_text && (
               <div className="story-text-right">
-                <h2 className="section-title">Our Story</h2>
+                <h2 className="section-title">Ons Storie</h2>
                 <div className="story-text">
                   {event.story_text}
                 </div>

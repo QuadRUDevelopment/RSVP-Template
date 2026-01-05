@@ -11,9 +11,26 @@ if (!supabaseUrl || !supabaseServiceKey) {
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export const handler: Handler = async (event) => {
+  // CORS headers
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  };
+
+  // Handle preflight OPTIONS request
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: '',
+    };
+  }
+
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
+      headers: corsHeaders,
       body: JSON.stringify({ error: 'Method not allowed' }),
     };
   }
@@ -25,6 +42,10 @@ export const handler: Handler = async (event) => {
     if (!slug || !inviteCode || !rsvp) {
       return {
         statusCode: 400,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ error: 'Missing required fields' }),
       };
     }
@@ -39,6 +60,10 @@ export const handler: Handler = async (event) => {
     if (eventError || !eventData) {
       return {
         statusCode: 404,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ error: 'Event not found' }),
       };
     }
@@ -56,6 +81,10 @@ export const handler: Handler = async (event) => {
     if (guestError || !guestData) {
       return {
         statusCode: 404,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ error: 'Guest not found' }),
       };
     }
@@ -64,6 +93,10 @@ export const handler: Handler = async (event) => {
     if (rsvp.plusOnes && rsvp.plusOnes.length > guestData.max_plus_ones) {
       return {
         statusCode: 400,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ 
           error: `Maximum ${guestData.max_plus_ones} plus ones allowed` 
         }),
@@ -92,6 +125,10 @@ export const handler: Handler = async (event) => {
       console.error('Error upserting RSVP:', rsvpError);
       return {
         statusCode: 500,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ error: 'Failed to save RSVP' }),
       };
     }
@@ -151,8 +188,8 @@ export const handler: Handler = async (event) => {
     return {
       statusCode: 200,
       headers: {
+        ...corsHeaders,
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
       },
       body: JSON.stringify({
         success: true,
@@ -163,6 +200,10 @@ export const handler: Handler = async (event) => {
     console.error('Error in rsvp-submit:', err);
     return {
       statusCode: 500,
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ error: err.message || 'Internal server error' }),
     };
   }
