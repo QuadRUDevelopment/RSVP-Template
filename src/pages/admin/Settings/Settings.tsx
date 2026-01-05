@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { Card } from '../../../components/ui/Card/Card';
 import { Button } from '../../../components/ui/Button/Button';
 import { ImageUpload } from '../../../components/ui/ImageUpload/ImageUpload';
@@ -219,13 +221,26 @@ export const Settings: React.FC = () => {
         <Card className="settings-section">
           <h2>Event Details</h2>
           <div className="form-group">
-            <label>Date</label>
-            <input
-              type="text"
-              value={formData.date_text || ''}
-              onChange={(e) => handleChange('date_text', e.target.value)}
-              placeholder="December 31, 2024"
+            <label>Wedding Date & Time</label>
+            <DatePicker
+              selected={formData.wedding_date ? new Date(formData.wedding_date) : null}
+              onChange={(date: Date | null) => {
+                if (date) {
+                  handleChange('wedding_date', date.toISOString());
+                } else {
+                  handleChange('wedding_date', null);
+                }
+              }}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              dateFormat="MMMM d, yyyy h:mm aa"
+              placeholderText="Select wedding date and time"
+              className="date-picker-input"
+              wrapperClassName="date-picker-wrapper"
+              isClearable
             />
+            <small>This date is used for the countdown timer and event display on the home page.</small>
           </div>
           <div className="form-group">
             <label>Venue Name</label>
@@ -403,6 +418,31 @@ export const Settings: React.FC = () => {
               />
             </div>
             <small>Used for highlights, active states, and special elements</small>
+          </div>
+          <div className="form-group">
+            <label>Container Color</label>
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <input
+                type="color"
+                value={formData.theme_json?.containerColor || '#2563eb'}
+                onChange={(e) => {
+                  const theme = formData.theme_json || {};
+                  handleChange('theme_json', { ...theme, containerColor: e.target.value });
+                }}
+                style={{ width: '60px', height: '40px', cursor: 'pointer' }}
+              />
+              <input
+                type="text"
+                value={formData.theme_json?.containerColor || '#2563eb'}
+                onChange={(e) => {
+                  const theme = formData.theme_json || {};
+                  handleChange('theme_json', { ...theme, containerColor: e.target.value });
+                }}
+                placeholder="#2563eb"
+                style={{ flex: 1 }}
+              />
+            </div>
+            <small>Used for all container sections across the site (Accommodation, Venue, Menu, Schedule, RSVP)</small>
           </div>
         </Card>
 
@@ -657,31 +697,6 @@ export const Settings: React.FC = () => {
           </div>
         </Card>
 
-        <Card className="settings-section">
-          <h2>Wedding Date & Time</h2>
-          <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1.5rem' }}>
-            Set the wedding date and time. This will be used for the countdown timer in the navigation.
-          </p>
-          <div className="form-group">
-            <label>Wedding Date & Time</label>
-            <input
-              type="datetime-local"
-              value={formData.wedding_date ? new Date(formData.wedding_date).toISOString().slice(0, 16) : ''}
-              onChange={(e) => {
-                const dateValue = e.target.value;
-                if (dateValue) {
-                  // Convert local datetime to ISO string
-                  const isoString = new Date(dateValue).toISOString();
-                  handleChange('wedding_date', isoString);
-                } else {
-                  handleChange('wedding_date', null);
-                }
-              }}
-              style={{ width: '100%', padding: '0.75rem', fontSize: '1rem' }}
-            />
-            <small>This date will be displayed as a countdown timer in the top navigation.</small>
-          </div>
-        </Card>
 
         <Card className="settings-section">
           <h2>Images</h2>

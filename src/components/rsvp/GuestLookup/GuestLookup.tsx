@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Button } from '../../ui/Button/Button';
 import { guestLookup } from '../../../lib/apiClient';
 import { getCurrentEventSlug } from '../../../lib/eventResolver';
@@ -9,14 +10,16 @@ interface GuestLookupProps {
 }
 
 export const GuestLookup: React.FC<GuestLookupProps> = ({ onGuestFound }) => {
+  const [searchParams] = useSearchParams();
   const [method, setMethod] = useState<'code' | 'name'>('code');
   const [inviteCode, setInviteCode] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const hasAutoSubmitted = useRef(false);
 
-  const handleLookup = async () => {
+  const handleLookup = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -36,7 +39,32 @@ export const GuestLookup: React.FC<GuestLookupProps> = ({ onGuestFound }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [method, inviteCode, firstName, lastName, onGuestFound]);
+
+  // Check for invite code in URL parameter on mount and auto-submit
+  useEffect(() => {
+    const codeFromUrl = searchParams.get('code');
+    if (codeFromUrl && !hasAutoSubmitted.current) {
+      setInviteCode(codeFromUrl);
+      setMethod('code');
+      hasAutoSubmitted.current = true;
+      
+      // Auto-submit after a short delay to ensure state is updated
+      const timer = setTimeout(() => {
+        // Use the current invite code from URL
+        const slug = getCurrentEventSlug();
+        guestLookup({
+          slug,
+          inviteCode: codeFromUrl,
+        })
+          .then(onGuestFound)
+          .catch((err: any) => {
+            setError(err.message || 'Guest not found. Please check your information.');
+          });
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams, onGuestFound]);
 
   return (
     <div className="guest-lookup">
@@ -106,4 +134,3 @@ export const GuestLookup: React.FC<GuestLookupProps> = ({ onGuestFound }) => {
     </div>
   );
 };
-

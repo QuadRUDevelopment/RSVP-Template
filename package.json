@@ -13,14 +13,17 @@
   "dependencies": {
     "@netlify/functions": "^5.1.2",
     "@supabase/supabase-js": "^2.89.0",
+    "@types/react-datepicker": "^6.2.0",
     "framer-motion": "^12.23.26",
     "jsonwebtoken": "^9.0.3",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.7",
     "react": "^19.2.0",
+    "react-datepicker": "^9.1.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.11.0",
     "sweetalert2": "^11.26.17",
+    "xlsx": "^0.18.5",
     "zustand": "^5.0.9"
   },
   "devDependencies": {

@@ -2,13 +2,40 @@ import React, { useEffect, useState } from 'react';
 import { TopNav } from '../../components/layout/TopNav/TopNav';
 import { Card } from '../../components/ui/Card/Card';
 import { getCurrentEventSlug } from '../../lib/eventResolver';
-import { fetchPublicTimeline } from '../../lib/apiClient';
+import { fetchPublicTimeline, fetchPublicEvent } from '../../lib/apiClient';
+import { useEventStore, getThemeColors } from '../../state/useEventStore';
 import './Schedule.css';
 
 export const Schedule: React.FC = () => {
+  const { event, setEvent } = useEventStore();
+  const theme = getThemeColors(event);
   const [timelineItems, setTimelineItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Helper to convert hex to RGB
+  const hexToRgb = (hex: string): string => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
+      : '37, 99, 235'; // Default blue
+  };
+
+  // Apply theme colors
+  useEffect(() => {
+    if (event) {
+      const root = document.documentElement;
+      root.style.setProperty('--theme-primary', theme.primary);
+      root.style.setProperty('--theme-secondary', theme.secondary);
+      root.style.setProperty('--theme-text', theme.text);
+      root.style.setProperty('--theme-background', theme.background);
+      root.style.setProperty('--theme-accent', theme.accent);
+      root.style.setProperty('--theme-accent-rgb', hexToRgb(theme.accent));
+      root.style.setProperty('--theme-container', theme.container);
+      root.style.setProperty('--theme-container-rgb', hexToRgb(theme.container));
+      document.body.style.backgroundColor = theme.background;
+    }
+  }, [event, theme]);
 
   useEffect(() => {
     const loadSchedule = async () => {
@@ -16,6 +43,14 @@ export const Schedule: React.FC = () => {
       setError(null);
       try {
         const slug = getCurrentEventSlug();
+        
+        // Load event data if not already loaded
+        if (!event) {
+          const eventData = await fetchPublicEvent(slug);
+          setEvent(eventData);
+        }
+        
+        // Load timeline
         const result = await fetchPublicTimeline(slug);
         setTimelineItems(result.timelineItems || []);
       } catch (err: any) {
@@ -26,7 +61,7 @@ export const Schedule: React.FC = () => {
     };
 
     loadSchedule();
-  }, []);
+  }, [event, setEvent]);
 
   if (loading) {
     return (

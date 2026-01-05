@@ -21,6 +21,14 @@ export const Home: React.FC = () => {
   const scheduleRef = useRef<HTMLDivElement>(null);
   const rsvpRef = useRef<HTMLDivElement>(null);
 
+  // Helper to convert hex to RGB
+  const hexToRgb = (hex: string): string => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
+      : '37, 99, 235'; // Default blue
+  };
+
   // Apply theme colors to CSS variables
   useEffect(() => {
     if (event) {
@@ -31,6 +39,9 @@ export const Home: React.FC = () => {
       root.style.setProperty('--theme-text', theme.text);
       root.style.setProperty('--theme-background', theme.background);
       root.style.setProperty('--theme-accent', theme.accent);
+      root.style.setProperty('--theme-accent-rgb', hexToRgb(theme.accent));
+      root.style.setProperty('--theme-container', theme.container);
+      root.style.setProperty('--theme-container-rgb', hexToRgb(theme.container));
       root.style.setProperty('--theme-nav-font-color', theme.navFontColor);
       root.style.setProperty('--theme-nav-font-size', `${theme.navFontSize}rem`);
       
@@ -320,12 +331,21 @@ export const Home: React.FC = () => {
                 {event.invitation_text}
               </div>
             )}
-            {event?.date_text && (
+            {event?.wedding_date && (
               <div className="rsvp-details">
                 <div className="rsvp-detail-item">
                   <div className="rsvp-detail-icon">📅</div>
                   <div className="rsvp-detail-label">Date</div>
-                  <div className="rsvp-detail-value">{event.date_text}</div>
+                  <div className="rsvp-detail-value">
+                    {new Date(event.wedding_date).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: 'numeric',
+                      minute: '2-digit'
+                    })}
+                  </div>
                 </div>
                 {event?.dress_code && (
                   <div className="rsvp-detail-item">

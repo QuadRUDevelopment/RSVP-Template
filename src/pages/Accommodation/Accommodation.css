@@ -1,7 +1,7 @@
 .accommodation-page {
   min-height: 100vh;
   padding-top: 80px;
-  background: #f9fafb;
+  background: var(--theme-background, #f9fafb);
   padding-bottom: 4rem;
 }
 
@@ -9,11 +9,18 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
+  background: rgba(var(--theme-container-rgb, 37, 99, 235), 0.03);
+  border: 1px solid rgba(var(--theme-container-rgb, 37, 99, 235), 0.15);
+  border-radius: 0.75rem;
 }
 
 .lookup-card {
   max-width: 500px;
   margin: 0 auto;
+  background: rgba(var(--theme-container-rgb, 37, 99, 235), 0.05);
+  border: 1px solid rgba(var(--theme-container-rgb, 37, 99, 235), 0.2);
+  border-radius: 0.75rem;
+  padding: 2rem;
 }
 
 .lookup-card h1 {
@@ -21,7 +28,7 @@
   font-weight: 700;
   margin-bottom: 0.5rem;
   text-align: center;
-  color: #111827;
+  color: var(--theme-text, #111827);
 }
 
 .lookup-subtitle {
@@ -57,8 +64,8 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: var(--theme-primary, #2563eb);
+  box-shadow: 0 0 0 3px rgba(var(--theme-primary-rgb, 37, 99, 235), 0.1);
 }
 
 .error-message {
@@ -78,7 +85,7 @@
   font-weight: 700;
   margin-bottom: 2rem;
   text-align: center;
-  color: #111827;
+  color: var(--theme-text, #111827);
 }
 
 .accommodation-grid {
@@ -97,7 +104,7 @@
 .accommodation-card h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--theme-text, #111827);
   margin: 0;
 }
 
@@ -110,20 +117,20 @@
 .accommodation-price {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #2563eb;
+  color: var(--theme-primary, #2563eb);
 }
 
 .accommodation-address {
   padding: 0.75rem;
-  background: #f3f4f6;
+  background: var(--theme-background, #f3f4f6);
   border-radius: 0.5rem;
-  color: #374151;
+  color: var(--theme-text, #374151);
   font-size: 0.875rem;
   line-height: 1.5;
 }
 
 .accommodation-address strong {
-  color: #111827;
+  color: var(--theme-text, #111827);
   display: block;
   margin-bottom: 0.25rem;
 }

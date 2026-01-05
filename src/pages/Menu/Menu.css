@@ -1,7 +1,7 @@
 .menu-page {
   min-height: 100vh;
   padding-top: 80px;
-  background: #f9fafb;
+  background: var(--theme-background, #f9fafb);
   padding-bottom: 4rem;
 }
 
@@ -9,6 +9,9 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
+  background: rgba(var(--theme-container-rgb, 37, 99, 235), 0.03);
+  border: 1px solid rgba(var(--theme-container-rgb, 37, 99, 235), 0.15);
+  border-radius: 0.75rem;
 }
 
 .menu-container h1 {
@@ -16,7 +19,7 @@
   font-weight: 700;
   margin-bottom: 2rem;
   text-align: center;
-  color: #111827;
+  color: var(--theme-text, #111827);
 }
 
 .menu-sections {
@@ -34,8 +37,8 @@
 .menu-category {
   font-size: 1.75rem;
   font-weight: 600;
-  color: #111827;
-  border-bottom: 2px solid #e5e7eb;
+  color: var(--theme-text, #111827);
+  border-bottom: 2px solid rgba(var(--theme-text-rgb, 17, 24, 39), 0.1);
   padding-bottom: 0.5rem;
 }
 
@@ -54,7 +57,7 @@
 .menu-item h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--theme-text, #111827);
   margin: 0;
 }
 
@@ -72,8 +75,8 @@
 }
 
 .diet-tag {
-  background: #eff6ff;
-  color: #2563eb;
+  background: rgba(var(--theme-primary-rgb, 37, 99, 235), 0.1);
+  color: var(--theme-primary, #2563eb);
   padding: 0.25rem 0.75rem;
   border-radius: 0.25rem;
   font-size: 0.75rem;

@@ -1,18 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TopNav } from '../../components/layout/TopNav/TopNav';
 import { Card } from '../../components/ui/Card/Card';
 import { Button } from '../../components/ui/Button/Button';
 import { getCurrentEventSlug } from '../../lib/eventResolver';
-import { guestLookup } from '../../lib/apiClient';
+import { guestLookup, fetchPublicEvent } from '../../lib/apiClient';
+import { useEventStore, getThemeColors } from '../../state/useEventStore';
 import './Accommodation.css';
 
 export const Accommodation: React.FC = () => {
+  const { event, setEvent } = useEventStore();
+  const theme = getThemeColors(event);
   const [step, setStep] = useState<'lookup' | 'results'>('lookup');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [accommodations, setAccommodations] = useState<any[]>([]);
+
+  // Load event data if not already loaded
+  useEffect(() => {
+    const loadEvent = async () => {
+      if (!event) {
+        try {
+          const slug = getCurrentEventSlug();
+          const eventData = await fetchPublicEvent(slug);
+          setEvent(eventData);
+        } catch (err) {
+          console.error('Failed to load event:', err);
+        }
+      }
+    };
+    loadEvent();
+  }, [event, setEvent]);
+
+  // Helper to convert hex to RGB
+  const hexToRgb = (hex: string): string => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
+      : '37, 99, 235'; // Default blue
+  };
+
+  // Apply theme colors
+  useEffect(() => {
+    if (event) {
+      const root = document.documentElement;
+      root.style.setProperty('--theme-primary', theme.primary);
+      root.style.setProperty('--theme-secondary', theme.secondary);
+      root.style.setProperty('--theme-text', theme.text);
+      root.style.setProperty('--theme-background', theme.background);
+      root.style.setProperty('--theme-accent', theme.accent);
+      root.style.setProperty('--theme-accent-rgb', hexToRgb(theme.accent));
+      root.style.setProperty('--theme-container', theme.container);
+      root.style.setProperty('--theme-container-rgb', hexToRgb(theme.container));
+      document.body.style.backgroundColor = theme.background;
+    }
+  }, [event, theme]);
 
   const handleLookup = async (e: React.FormEvent) => {
     e.preventDefault();

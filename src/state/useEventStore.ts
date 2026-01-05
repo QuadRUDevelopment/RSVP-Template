@@ -62,6 +62,7 @@ export const getThemeColors = (event: Event | null) => {
     text: theme.textColor || '#111827',
     background: theme.backgroundColor || '#ffffff',
     accent: theme.accentColor || '#2563eb',
+    container: theme.containerColor || '#2563eb',
     navFontColor: theme.navFontColor || '#6b7280',
     navFontSize: theme.navFontSize || 1,
   };
