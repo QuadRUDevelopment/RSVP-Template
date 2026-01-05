@@ -15,6 +15,14 @@ export const TopNav: React.FC = () => {
 
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // Helper to convert hex to RGB
+  const hexToRgb = (hex: string): string => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
+      : '37, 99, 235'; // Default blue
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -90,8 +98,10 @@ export const TopNav: React.FC = () => {
         '--theme-primary': theme.primary, 
         '--theme-accent': theme.accent, 
         '--theme-text': theme.text,
+        '--theme-background': theme.background,
         '--theme-nav-font-color': theme.navFontColor,
         '--theme-nav-font-size': `${theme.navFontSize}rem`,
+        '--theme-primary-rgb': hexToRgb(theme.primary),
       } as React.CSSProperties}
     >
       <div className="nav-container">
