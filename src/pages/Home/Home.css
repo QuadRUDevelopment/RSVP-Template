@@ -380,6 +380,18 @@
 /* Schedule Section */
 .schedule-section {
   background: var(--theme-background, #f9fafb);
+  padding-top: 1rem !important; /* Override default story-section padding */
+  padding-bottom: 2rem;
+}
+
+/* Reduce spacing for schedule section heading */
+.schedule-section .section-content {
+  padding-top: 0.5rem;
+}
+
+.schedule-section .section-title {
+  margin-top: 0;
+  margin-bottom: 1rem;
 }
 
 .timeline-container {
@@ -462,14 +474,14 @@
   position: relative;
 }
 
-/* Position left events (even indices) on the left side */
-.timeline-container .p-timeline-event:nth-child(even) .p-timeline-event-content {
+/* Position left events (1st, 3rd, 5th...) on the left side of center line */
+.timeline-container .p-timeline-event:nth-child(odd) .p-timeline-event-content {
   margin-right: auto;
   margin-left: 0;
 }
 
-/* Position right events (odd indices) on the right side */
-.timeline-container .p-timeline-event:nth-child(odd) .p-timeline-event-content {
+/* Position right events (2nd, 4th, 6th...) on the right side of center line */
+.timeline-container .p-timeline-event:nth-child(even) .p-timeline-event-content {
   margin-left: auto;
   margin-right: 0;
 }
