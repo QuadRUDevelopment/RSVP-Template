@@ -1,25 +1,15 @@
 import { Handler } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
-import jwt from 'jsonwebtoken';
+import { verifySupabaseAuth } from './_helpers/auth';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'change-me-in-production';
 
 if (!supabaseUrl || !supabaseServiceKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-function verifyToken(token: string): boolean {
-  try {
-    jwt.verify(token, JWT_SECRET);
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 function convertToCSV(data: any[]): string {
   if (data.length === 0) return '';
@@ -45,21 +35,13 @@ function convertToCSV(data: any[]): string {
 }
 
 export const handler: Handler = async (event) => {
-  const authHeader = event.headers.authorization || event.headers.Authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  // Verify Supabase auth token
+  const authResult = await verifySupabaseAuth(event);
+  if (!authResult.valid) {
     return {
       statusCode: 401,
       headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: 'Unauthorized' }),
-    };
-  }
-
-  const token = authHeader.substring(7);
-  if (!verifyToken(token)) {
-    return {
-      statusCode: 401,
-      headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: 'Invalid token' }),
+      body: JSON.stringify({ error: authResult.error || 'Unauthorized' }),
     };
   }
 

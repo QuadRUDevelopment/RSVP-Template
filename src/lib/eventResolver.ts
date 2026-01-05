@@ -12,6 +12,17 @@ export function getEventSlugFromHostname(): string | null {
   // Remove 'www.' prefix if present
   const cleanHostname = hostname.replace(/^www\./, '');
   
+  // Handle Netlify preview domains (e.g., random-name-123.netlify.app)
+  if (cleanHostname.includes('.netlify.app') || cleanHostname.includes('.netlify.app')) {
+    // For Netlify previews, try to extract from subdomain or use query param
+    const parts = cleanHostname.split('.');
+    if (parts.length > 3) {
+      // Has subdomain before .netlify.app (e.g., event-slug.random-name.netlify.app)
+      return parts[0];
+    }
+    // Fall through to query param check
+  }
+  
   // If it's the base domain (e.g., quadrursvp.co.za), return null or default
   const baseDomains = ['quadrursvp.co.za', 'localhost', '127.0.0.1'];
   if (baseDomains.some(domain => cleanHostname === domain || cleanHostname.endsWith(`.${domain}`))) {

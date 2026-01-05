@@ -37,6 +37,7 @@ export interface RSVPSubmitRequest {
 }
 
 export interface AdminLoginRequest {
+  email: string;
   password: string;
 }
 
@@ -119,14 +120,15 @@ export async function submitRSVP(request: RSVPSubmitRequest) {
   return response.json();
 }
 
-export async function adminLogin(password: string): Promise<{ token: string }> {
+export async function adminLogin(email: string, password: string): Promise<{ token: string; refreshToken: string; user: { id: string; email: string } }> {
   const response = await fetch(`${API_BASE}/admin-login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password }),
+    body: JSON.stringify({ email, password }),
   });
   if (!response.ok) {
-    throw new Error('Invalid password');
+    const error = await response.json().catch(() => ({ error: 'Invalid credentials' }));
+    throw new Error(error.error || 'Invalid credentials');
   }
   return response.json();
 }

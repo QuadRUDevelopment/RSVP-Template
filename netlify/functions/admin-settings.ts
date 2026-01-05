@@ -1,10 +1,9 @@
 import { Handler } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
-import jwt from 'jsonwebtoken';
+import { verifySupabaseAuth } from './_helpers/auth';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'change-me-in-production';
 
 if (!supabaseUrl || !supabaseServiceKey) {
   throw new Error('Missing Supabase environment variables');
@@ -12,32 +11,14 @@ if (!supabaseUrl || !supabaseServiceKey) {
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-function verifyToken(token: string): boolean {
-  try {
-    jwt.verify(token, JWT_SECRET);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 export const handler: Handler = async (event) => {
-  // Verify auth token
-  const authHeader = event.headers.authorization || event.headers.Authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  // Verify Supabase auth token
+  const authResult = await verifySupabaseAuth(event);
+  if (!authResult.valid) {
     return {
       statusCode: 401,
       headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: 'Unauthorized' }),
-    };
-  }
-
-  const token = authHeader.substring(7);
-  if (!verifyToken(token)) {
-    return {
-      statusCode: 401,
-      headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: 'Invalid token' }),
+      body: JSON.stringify({ error: authResult.error || 'Unauthorized' }),
     };
   }
 
@@ -110,20 +91,53 @@ export const handler: Handler = async (event) => {
         };
       }
 
-      const { data, error } = await supabase
+      // Check if event exists
+      const { data: existingEvent } = await supabase
         .from('events')
-        .update(updateData)
+        .select('id')
         .eq('slug', eventSlug)
-        .select()
         .single();
 
-      if (error) {
-        console.error('Update error:', error);
-        return {
-          statusCode: 500,
-          headers: { 'Access-Control-Allow-Origin': '*' },
-          body: JSON.stringify({ error: 'Failed to update event' }),
-        };
+      let result;
+      if (existingEvent) {
+        // Update existing event
+        const { data, error } = await supabase
+          .from('events')
+          .update(updateData)
+          .eq('slug', eventSlug)
+          .select()
+          .single();
+
+        if (error) {
+          console.error('Update error:', error);
+          return {
+            statusCode: 500,
+            headers: { 'Access-Control-Allow-Origin': '*' },
+            body: JSON.stringify({ error: 'Failed to update event' }),
+          };
+        }
+        result = data;
+      } else {
+        // Create new event
+        const { data, error } = await supabase
+          .from('events')
+          .insert({
+            slug: eventSlug,
+            title: updateData.title || 'New Event',
+            ...updateData,
+          })
+          .select()
+          .single();
+
+        if (error) {
+          console.error('Create error:', error);
+          return {
+            statusCode: 500,
+            headers: { 'Access-Control-Allow-Origin': '*' },
+            body: JSON.stringify({ error: 'Failed to create event: ' + error.message }),
+          };
+        }
+        result = data;
       }
 
       return {
@@ -132,7 +146,7 @@ export const handler: Handler = async (event) => {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(result),
       };
     } catch (err: any) {
       return {

@@ -1,31 +1,15 @@
 import { Handler } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
-import jwt from 'jsonwebtoken';
+import { verifySupabaseAuth } from './_helpers/auth';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const jwtSecret = process.env.ADMIN_JWT_SECRET;
 
-if (!supabaseUrl || !supabaseServiceKey || !jwtSecret) {
+if (!supabaseUrl || !supabaseServiceKey) {
   throw new Error('Missing required environment variables');
 }
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-const verifyAuth = (event: any): { valid: boolean; error?: string } => {
-  const authHeader = event.headers.authorization || event.headers.Authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return { valid: false, error: 'Missing or invalid authorization header' };
-  }
-
-  try {
-    const token = authHeader.replace('Bearer ', '');
-    jwt.verify(token, jwtSecret);
-    return { valid: true };
-  } catch (err) {
-    return { valid: false, error: 'Invalid token' };
-  }
-};
 
 export const handler: Handler = async (event) => {
   // CORS headers

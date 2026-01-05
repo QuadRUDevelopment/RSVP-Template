@@ -26,10 +26,21 @@ export const Settings: React.FC = () => {
           { method: 'GET' },
           token
         );
-        setFormData(data);
-        setEvent(data);
-      } catch (err) {
-        console.error('Failed to load settings:', err);
+        // If event doesn't exist, initialize with current slug
+        if (!data || !data.slug) {
+          setFormData({ slug: slug });
+        } else {
+          setFormData(data);
+          setEvent(data);
+        }
+      } catch (err: any) {
+        // If event not found, initialize with current slug for creation
+        if (err.message?.includes('not found') || err.message?.includes('404')) {
+          const slug = getCurrentEventSlug();
+          setFormData({ slug: slug });
+        } else {
+          console.error('Failed to load settings:', err);
+        }
       } finally {
         setLoading(false);
       }
@@ -46,7 +57,17 @@ export const Settings: React.FC = () => {
     if (!token) return;
     setSaving(true);
     try {
-      const slug = getCurrentEventSlug();
+      // Use the slug from formData if it exists, otherwise use current slug from subdomain
+      const slug = formData.slug || getCurrentEventSlug();
+      
+      // Ensure slug is set
+      if (!slug) {
+        const { createErrorModal } = await import('../../../lib/sweetalert2Config');
+        await createErrorModal('Error', 'Event slug is required. Please access the admin panel via a subdomain (e.g., your-event.quadrursvp.co.za)');
+        setSaving(false);
+        return;
+      }
+
       const updated = await adminRequest(
         'admin-settings',
         {
@@ -124,12 +145,17 @@ export const Settings: React.FC = () => {
             <label>Event Slug (Subdomain)</label>
             <input
               type="text"
-              value={formData.slug || ''}
+              value={formData.slug || getCurrentEventSlug()}
               onChange={(e) => handleChange('slug', e.target.value)}
               placeholder="event-slug"
-              disabled
+              disabled={!!formData.slug}
             />
-            <small>This is your subdomain identifier. Cannot be changed.</small>
+            <small>
+              {formData.slug 
+                ? 'This is your subdomain identifier. Cannot be changed after creation.'
+                : `Current subdomain: ${getCurrentEventSlug()}. This will be used as the event slug when you save.`
+              }
+            </small>
           </div>
           <div className="form-group">
             <label>Event Title</label>
