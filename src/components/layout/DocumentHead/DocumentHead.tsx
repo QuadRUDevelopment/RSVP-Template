@@ -28,15 +28,68 @@ export const DocumentHead: React.FC = () => {
   }, [event, setEvent]);
 
   useEffect(() => {
-    // Update document title
-    if (event?.site_name) {
-      document.title = event.site_name;
-    } else if (event?.title) {
-      document.title = event.title;
-    } else {
-      document.title = 'QuadruRSVP';
+    // Update document title - prioritize site_name from settings
+    // This is what appears in browser tabs and should be used for social sharing
+    const title = event?.site_name || event?.title || 'QuadruRSVP';
+    document.title = title;
+    
+    // Also update the <title> tag in the HTML head if it exists
+    const titleElement = document.querySelector('title');
+    if (titleElement) {
+      titleElement.textContent = title;
     }
-  }, [event?.site_name, event?.title]);
+
+    // Update or create Open Graph and Twitter Card meta tags
+    const updateMetaTag = (property: string, content: string, isProperty = true) => {
+      const selector = isProperty ? `meta[property="${property}"]` : `meta[name="${property}"]`;
+      let meta = document.querySelector(selector) as HTMLMetaElement;
+      
+      if (!meta) {
+        meta = document.createElement('meta');
+        if (isProperty) {
+          meta.setAttribute('property', property);
+        } else {
+          meta.setAttribute('name', property);
+        }
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', content);
+    };
+
+    // Open Graph tags
+    updateMetaTag('og:title', title);
+    updateMetaTag('og:type', 'website');
+    
+    // Description - use invitation_text, story_text, or a default
+    const description = event?.invitation_text || event?.story_text || event?.banner_text || 'Join us for a special celebration!';
+    updateMetaTag('og:description', description);
+    
+    // Image - prefer hero_image_url for social sharing (larger, better for previews)
+    // Fall back to site_icon_url if no hero image
+    const imageUrl = event?.hero_image_url || event?.site_icon_url || '';
+    if (imageUrl) {
+      updateMetaTag('og:image', imageUrl);
+      updateMetaTag('og:image:width', '1200');
+      updateMetaTag('og:image:height', '630');
+      updateMetaTag('og:image:type', 'image/png');
+      updateMetaTag('og:image:alt', title); // Add alt text for accessibility
+    }
+    
+    // URL - current page URL
+    updateMetaTag('og:url', window.location.href);
+    updateMetaTag('og:site_name', title);
+
+    // Twitter Card tags
+    updateMetaTag('twitter:card', 'summary_large_image', false);
+    updateMetaTag('twitter:title', title, false);
+    updateMetaTag('twitter:description', description, false);
+    if (imageUrl) {
+      updateMetaTag('twitter:image', imageUrl, false);
+    }
+
+    // Standard meta description (for SEO)
+    updateMetaTag('description', description, false);
+  }, [event?.site_name, event?.title, event?.invitation_text, event?.story_text, event?.banner_text, event?.site_icon_url, event?.hero_image_url]);
 
   useEffect(() => {
     // Update favicon
