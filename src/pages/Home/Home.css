@@ -460,6 +460,17 @@
 .timeline-container .p-timeline-event-content {
   width: 45%;
   position: relative;
+  display: flex;
+}
+
+/* Ensure left events are on the left */
+.timeline-container .p-timeline-event:nth-child(even) .p-timeline-event-content {
+  justify-content: flex-start;
+}
+
+/* Ensure right events are on the right */
+.timeline-container .p-timeline-event:nth-child(odd) .p-timeline-event-content {
+  justify-content: flex-end;
 }
 
 /* Left side events (even indices: 0, 2, 4...) */
