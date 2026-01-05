@@ -386,14 +386,15 @@ export const Home: React.FC = () => {
               <div className="timeline-container">
                 <div className="timeline-scroll-wrapper" ref={timelineScrollRef}>
                   <Timeline
-                    value={timelineItems.map((item) => ({
+                    value={timelineItems.map((item, index) => ({
                       id: item.id,
                       time: item.time,
                       title: item.title,
+                      isEven: index % 2 === 0, // Track if it's an even index (0, 2, 4...) for left side
                     }))}
                     layout="vertical"
                     content={(item) => (
-                      <div className="timeline-event">
+                      <div className={`timeline-event ${item.isEven ? 'timeline-event-left' : 'timeline-event-right'}`}>
                         <div className="timeline-time">{item.time}</div>
                         <div className="timeline-title">{item.title}</div>
                       </div>
