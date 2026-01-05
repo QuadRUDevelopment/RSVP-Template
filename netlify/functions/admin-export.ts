@@ -35,16 +35,7 @@ function convertToCSV(data: any[]): string {
 }
 
 export const handler: Handler = async (event) => {
-  // Verify Supabase auth token
-  const authResult = await verifySupabaseAuth(event);
-  if (!authResult.valid) {
-    return {
-      statusCode: 401,
-      headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: authResult.error || 'Unauthorized' }),
-    };
-  }
-
+  // Handle preflight OPTIONS request first (before auth check)
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
@@ -54,6 +45,19 @@ export const handler: Handler = async (event) => {
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
       },
       body: '',
+    };
+  }
+
+  // Verify Supabase auth token
+  const authResult = await verifySupabaseAuth(event);
+  if (!authResult.valid) {
+    return {
+      statusCode: 401,
+      headers: { 
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ error: authResult.error || 'Unauthorized' }),
     };
   }
 
