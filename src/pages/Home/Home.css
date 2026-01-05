@@ -1,0 +1,575 @@
+.home-story {
+  min-height: 100vh;
+  padding-top: 80px; /* Account for fixed nav */
+  background-color: var(--theme-background, #ffffff);
+}
+
+.story-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  position: relative;
+  background-color: var(--theme-background, #ffffff);
+}
+
+.banner-section {
+  background-size: cover;
+  background-position: center;
+  background-color: var(--theme-background, #f3f4f6);
+  padding: 0;
+  min-height: 100vh;
+}
+
+.banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 0;
+}
+
+.section-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.banner-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: white;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.section-content {
+  position: relative;
+  z-index: 2;
+}
+
+.banner-title {
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.scroll-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  margin-top: 2rem;
+  animation: bounce 2s infinite;
+}
+
+.scroll-indicator span {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+
+.section-content {
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--theme-text, #111827);
+}
+
+.invitation-section {
+  background: var(--theme-background, #ffffff);
+}
+
+.invitation-text {
+  font-size: 1.5rem;
+  line-height: 1.8;
+  color: #374151;
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+.cta-button {
+  margin-top: 1rem;
+}
+
+.story-section-alt {
+  background: var(--theme-background, #f9fafb);
+}
+
+/* Story section with gallery and text side by side */
+.story-section-with-gallery {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.story-content-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  min-height: 100vh;
+  align-items: center;
+}
+
+.story-gallery-left {
+  position: relative;
+  height: 100%;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.story-gallery-left .scroll-carousel-container {
+  width: 100%;
+  height: 100%;
+  max-height: 80vh;
+}
+
+.story-text-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.story-text-right .section-title {
+  margin-bottom: 2rem;
+}
+
+.story-text {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #4b5563;
+}
+
+/* Legacy styles for backward compatibility */
+.story-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  text-align: left;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.story-image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.story-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.story-text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 3rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.message-section {
+  background: var(--theme-background, #ffffff);
+}
+
+.message-text {
+  font-size: 1.25rem;
+  line-height: 1.8;
+  color: #374151;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.details-section {
+  background: var(--theme-background, #f9fafb);
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.detail-item {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.detail-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.detail-label {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.detail-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Venue Section */
+.venue-section {
+  background: var(--theme-background, #ffffff);
+}
+
+.venue-content {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.venue-name {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.venue-text {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+}
+
+.venue-address {
+  font-size: 1rem;
+  color: #374151;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: var(--theme-background, #f9fafb);
+  border-radius: 0.5rem;
+}
+
+.venue-address strong {
+  color: #111827;
+}
+
+.venue-map {
+  margin: 2rem 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.venue-placeholder {
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Menu Section */
+.menu-section {
+  background: var(--theme-background, #ffffff);
+}
+
+.menu-sections {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.menu-section-group {
+  margin-bottom: 3rem;
+}
+
+.menu-section-group:last-child {
+  margin-bottom: 0;
+}
+
+.menu-category {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.menu-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.menu-item-card {
+  padding: 1.5rem;
+}
+
+.menu-item-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.75rem;
+}
+
+.menu-item-description {
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.diet-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.diet-tag {
+  background: var(--theme-background, #f3f4f6);
+  color: #374151;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.section-loading,
+.section-empty {
+  text-align: center;
+  color: #6b7280;
+  padding: 2rem;
+  font-style: italic;
+}
+
+/* Schedule Section */
+.schedule-section {
+  background: var(--theme-background, #f9fafb);
+}
+
+.timeline-container {
+  max-width: 100%;
+  margin: 2rem auto;
+  padding: 2rem 0;
+}
+
+/* PrimeReact Timeline Customization */
+.timeline-container .p-timeline {
+  padding: 0;
+}
+
+.timeline-container .p-timeline-event {
+  min-width: 150px;
+  flex: 1 1 auto;
+}
+
+.timeline-container .p-timeline-event-connector {
+  background-color: #e5e7eb;
+  height: 2px;
+}
+
+.timeline-container .p-timeline-event-marker {
+  background-color: var(--theme-primary, #2563eb);
+  border: 3px solid white;
+  box-shadow: 0 0 0 2px var(--theme-primary, #2563eb);
+  width: 1rem;
+  height: 1rem;
+}
+
+.timeline-event {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.timeline-time {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--theme-primary, #2563eb);
+  margin-bottom: 0.5rem;
+}
+
+.timeline-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  line-height: 1.4;
+}
+
+/* Alternating layout - switch time and title for even items */
+.timeline-event-reversed {
+  flex-direction: column-reverse;
+}
+
+.timeline-event-reversed .timeline-time {
+  margin-bottom: 0;
+  margin-top: 0.5rem;
+}
+
+/* RSVP Section */
+.rsvp-section {
+  background: var(--theme-background, #ffffff);
+}
+
+.rsvp-content {
+  max-width: 490px; /* 700px * 0.7 */
+  margin: 0 auto;
+}
+
+.rsvp-content .invitation-text {
+  font-size: 1.05rem; /* 1.5rem * 0.7 */
+  line-height: 1.6; /* 1.8 * 0.7 ≈ 1.26, rounded to 1.6 */
+  color: #374151;
+  margin-bottom: 1.4rem; /* 2rem * 0.7 */
+  font-style: italic;
+  text-align: center;
+}
+
+.rsvp-details {
+  display: flex;
+  gap: 1.4rem; /* 2rem * 0.7 */
+  justify-content: center;
+  margin: 1.4rem 0; /* 2rem * 0.7 */
+  flex-wrap: wrap;
+}
+
+.rsvp-detail-item {
+  text-align: center;
+  padding: 1.05rem; /* 1.5rem * 0.7 */
+  background: var(--theme-background, #f9fafb);
+  border-radius: 0.5rem;
+  min-width: 140px; /* 200px * 0.7 */
+}
+
+.rsvp-detail-icon {
+  font-size: 1.75rem; /* 2.5rem * 0.7 */
+  margin-bottom: 0.35rem; /* 0.5rem * 0.7 */
+}
+
+.rsvp-detail-label {
+  font-size: 0.6125rem; /* 0.875rem * 0.7 */
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #6b7280;
+  margin-bottom: 0.35rem; /* 0.5rem * 0.7 */
+}
+
+.rsvp-detail-value {
+  font-size: 0.7875rem; /* 1.125rem * 0.7 */
+  font-weight: 600;
+  color: #111827;
+}
+
+.rsvp-button {
+  margin: 1.4rem 0; /* 2rem * 0.7 */
+  width: 100%;
+  max-width: 210px; /* 300px * 0.7 */
+}
+
+.guest-message {
+  margin-top: 1.4rem; /* 2rem * 0.7 */
+  padding: 1.05rem; /* 1.5rem * 0.7 */
+  background: var(--theme-background, #f9fafb);
+  border-radius: 0.5rem;
+  font-size: 0.7rem; /* 1rem * 0.7 */
+  line-height: 1.4; /* 1.6 * 0.7 ≈ 1.12, rounded to 1.4 */
+  color: #4b5563;
+  font-style: italic;
+}
+
+.gallery-carousel-section {
+  padding: 0;
+  min-height: 100vh;
+  position: relative;
+}
+
+.home-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  padding-top: 80px;
+}
+
+@media (max-width: 768px) {
+  .banner-title {
+    font-size: 2.5rem;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .story-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+  
+  .venue-content {
+    text-align: center;
+  }
+  
+  .venue-name {
+    font-size: 1.75rem;
+  }
+  
+  .venue-map {
+    height: 300px;
+  }
+  
+  .rsvp-content .invitation-text {
+    font-size: 1.25rem;
+  }
+  
+  .rsvp-details {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .rsvp-detail-item {
+    width: 100%;
+    max-width: 300px;
+  }
+}

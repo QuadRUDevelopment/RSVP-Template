@@ -1,0 +1,213 @@
+/* SweetAlert2 Custom Styling to Match App Design */
+
+/* Container */
+.swal2-custom-container {
+  font-family: inherit;
+}
+
+/* Popup */
+.swal2-custom-popup {
+  border-radius: 0.75rem !important;
+  padding: 2rem !important;
+  font-family: inherit !important;
+}
+
+/* Title */
+.swal2-custom-title {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  color: #111827 !important;
+  margin-bottom: 1.5rem !important;
+  text-align: left !important;
+}
+
+/* HTML Container */
+.swal2-custom-html {
+  text-align: left !important;
+  color: #374151 !important;
+  font-size: 1rem !important;
+}
+
+/* Input Fields */
+.swal2-custom-input,
+.swal2-custom-textarea,
+.swal2-custom-select {
+  padding: 0.75rem !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 0.5rem !important;
+  font-size: 1rem !important;
+  font-family: inherit !important;
+  color: #111827 !important;
+  background-color: white !important;
+  width: 100% !important;
+  margin: 0.5rem 0 !important;
+  transition: all 0.2s !important;
+}
+
+.swal2-custom-input:focus,
+.swal2-custom-textarea:focus,
+.swal2-custom-select:focus {
+  outline: none !important;
+  border-color: var(--swal-primary, #2563eb) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+}
+
+.swal2-custom-textarea {
+  resize: vertical !important;
+  min-height: 80px !important;
+}
+
+/* Select Dropdown */
+.swal2-custom-select {
+  appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23374151' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.75rem center !important;
+  background-size: 12px !important;
+  padding-right: 2.5rem !important;
+}
+
+/* Buttons */
+.swal2-custom-confirm,
+.swal2-custom-cancel {
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+  font-family: inherit !important;
+  transition: all 0.2s !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.swal2-custom-confirm {
+  background-color: var(--swal-primary, #2563eb) !important;
+  color: white !important;
+}
+
+.swal2-custom-confirm:hover {
+  opacity: 0.9 !important;
+}
+
+.swal2-custom-cancel {
+  background-color: var(--swal-secondary, #64748b) !important;
+  color: white !important;
+}
+
+.swal2-custom-cancel:hover {
+  opacity: 0.9 !important;
+}
+
+/* File Input */
+.swal2-custom-popup input[type="file"] {
+  padding: 0.75rem !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 0.5rem !important;
+  font-size: 1rem !important;
+  font-family: inherit !important;
+  color: #374151 !important;
+  background-color: white !important;
+  width: 100% !important;
+  margin: 0.5rem 0 !important;
+  cursor: pointer !important;
+}
+
+.swal2-custom-popup input[type="file"]:focus {
+  outline: none !important;
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+}
+
+/* Drag and drop area styling in SweetAlert2 */
+#swal-image-upload-area {
+  user-select: none;
+}
+
+#swal-image-upload-area:hover {
+  border-color: #2563eb !important;
+  background: rgba(37, 99, 235, 0.05) !important;
+}
+
+/* Labels and Helper Text */
+.swal2-custom-popup label {
+  font-weight: 500 !important;
+  color: #374151 !important;
+  font-size: 0.875rem !important;
+  margin-bottom: 0.5rem !important;
+  display: block !important;
+}
+
+.swal2-custom-popup p {
+  font-size: 0.875rem !important;
+  color: #6b7280 !important;
+  margin: 0.5rem 0 !important;
+}
+
+/* Icon Colors */
+.swal2-icon.swal2-success {
+  border-color: var(--swal-primary, #2563eb) !important;
+  color: var(--swal-primary, #2563eb) !important;
+}
+
+.swal2-icon.swal2-error {
+  border-color: #dc2626 !important;
+  color: #dc2626 !important;
+}
+
+.swal2-icon.swal2-warning {
+  border-color: #f59e0b !important;
+  color: #f59e0b !important;
+}
+
+.swal2-icon.swal2-info {
+  border-color: var(--swal-primary, #2563eb) !important;
+  color: var(--swal-primary, #2563eb) !important;
+}
+
+/* Validation Message */
+.swal2-validation-message {
+  background-color: #fee2e2 !important;
+  color: #dc2626 !important;
+  border-radius: 0.5rem !important;
+  padding: 0.75rem !important;
+  font-size: 0.875rem !important;
+  margin-top: 1rem !important;
+}
+
+/* Override default SweetAlert2 spacing */
+.swal2-popup {
+  padding: 2rem !important;
+}
+
+.swal2-html-container {
+  margin: 1.5rem 0 !important;
+}
+
+/* Hide any unwanted checkboxes (like "Remember me" or default checkboxes) */
+.swal2-checkbox,
+.swal2-checkbox-label,
+.swal2-input[type="checkbox"],
+input[type="checkbox"].swal2-checkbox,
+.swal2-popup .swal2-checkbox,
+.swal2-popup .swal2-checkbox-label,
+.swal2-popup input[type="checkbox"]:not([id*="swal"]):not([class*="custom"]),
+.swal2-actions .swal2-checkbox,
+.swal2-actions .swal2-checkbox-label {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+
+/* Input spacing */
+.swal2-custom-popup .swal2-input,
+.swal2-custom-popup .swal2-textarea,
+.swal2-custom-popup .swal2-select {
+  margin: 0.5rem 0 !important;
+}
+

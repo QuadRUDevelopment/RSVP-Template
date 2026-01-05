@@ -1,0 +1,111 @@
+.scroll-carousel-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  max-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #f9fafb;
+  border-radius: 1rem;
+}
+
+.scroll-carousel-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scroll-carousel-image {
+  width: 100%;
+  height: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 1rem;
+}
+
+.scroll-carousel-caption {
+  position: absolute;
+  bottom: 4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  font-size: 1.125rem;
+  max-width: 80%;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.scroll-carousel-progress {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.progress-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.progress-dot.active {
+  background: white;
+  width: 30px;
+  border-radius: 5px;
+}
+
+/* Scroll hint for first image */
+.scroll-carousel-container::after {
+  content: 'Scroll to view more';
+  position: absolute;
+  bottom: 6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  animation: fadeInOut 2s infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Hide hint when not on first image */
+.scroll-carousel-container.not-first::after {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .scroll-carousel-caption {
+    bottom: 3rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    max-width: 90%;
+  }
+
+  .scroll-carousel-progress {
+    bottom: 1.5rem;
+  }
+}
+
