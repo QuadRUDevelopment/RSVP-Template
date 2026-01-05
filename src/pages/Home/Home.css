@@ -383,64 +383,84 @@
 }
 
 .timeline-container {
-  max-width: 100%;
-  margin: 2rem auto;
-  padding: 2rem 0;
+  max-width: 600px;
+  margin: 1rem auto;
+  padding: 1rem 0;
 }
 
-/* PrimeReact Timeline Customization */
+.timeline-scroll-wrapper {
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem;
+  /* Custom scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-primary, #2563eb) rgba(0, 0, 0, 0.1);
+}
+
+.timeline-scroll-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.timeline-scroll-wrapper::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.timeline-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: var(--theme-primary, #2563eb);
+  border-radius: 3px;
+}
+
+.timeline-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-accent, #2563eb);
+}
+
+/* PrimeReact Timeline Customization - Vertical */
 .timeline-container .p-timeline {
   padding: 0;
 }
 
 .timeline-container .p-timeline-event {
-  min-width: 150px;
-  flex: 1 1 auto;
+  padding: 0.5rem 0;
+  min-height: auto;
 }
 
 .timeline-container .p-timeline-event-connector {
   background-color: #e5e7eb;
-  height: 2px;
+  width: 2px;
+  height: 2rem;
 }
 
 .timeline-container .p-timeline-event-marker {
   background-color: var(--theme-primary, #2563eb);
-  border: 3px solid white;
+  border: 2px solid white;
   box-shadow: 0 0 0 2px var(--theme-primary, #2563eb);
-  width: 1rem;
-  height: 1rem;
+  width: 0.75rem;
+  height: 0.75rem;
 }
 
 .timeline-event {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 0.5rem;
+  align-items: flex-start;
+  text-align: left;
+  padding: 0.25rem 0.5rem;
+  margin-left: 1rem;
 }
 
 .timeline-time {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--theme-primary, #2563eb);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .timeline-title {
   font-size: 0.875rem;
   font-weight: 500;
   color: #374151;
-  line-height: 1.4;
-}
-
-/* Alternating layout - switch time and title for even items */
-.timeline-event-reversed {
-  flex-direction: column-reverse;
-}
-
-.timeline-event-reversed .timeline-time {
-  margin-bottom: 0;
-  margin-top: 0.5rem;
+  line-height: 1.3;
 }
 
 /* RSVP Section */

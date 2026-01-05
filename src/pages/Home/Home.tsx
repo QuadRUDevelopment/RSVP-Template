@@ -20,6 +20,7 @@ export const Home: React.FC = () => {
   const venueRef = useRef<HTMLDivElement>(null);
   const scheduleRef = useRef<HTMLDivElement>(null);
   const rsvpRef = useRef<HTMLDivElement>(null);
+  const timelineScrollRef = useRef<HTMLDivElement>(null);
 
   // Helper to convert hex to RGB
   const hexToRgb = (hex: string): string => {
@@ -149,6 +150,69 @@ export const Home: React.FC = () => {
 
     loadEvent();
   }, [slug, setEvent, setLoading, setError]);
+
+  // Handle timeline scroll behavior
+  useEffect(() => {
+    if (!timelineScrollRef.current || timelineItems.length === 0) return;
+
+    const timelineWrapper = timelineScrollRef.current;
+    let isScrollingTimeline = false;
+    let scrollTimeout: number | null = null;
+
+    const handleWheel = (e: WheelEvent) => {
+      // Check if timeline is in view
+      const rect = timelineWrapper.getBoundingClientRect();
+      const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+
+      if (!isInView) return;
+
+      const isAtTop = timelineWrapper.scrollTop <= 0;
+      const isAtBottom = 
+        timelineWrapper.scrollHeight - timelineWrapper.scrollTop <= timelineWrapper.clientHeight + 1;
+
+      // If scrolling down and at bottom, allow page scroll
+      if (e.deltaY > 0 && isAtBottom) {
+        // Don't prevent default - allow page to scroll
+        return;
+      }
+
+      // If scrolling up and at top, allow page scroll
+      if (e.deltaY < 0 && isAtTop) {
+        // Don't prevent default - allow page to scroll
+        return;
+      }
+
+      // Otherwise, scroll the timeline
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        timelineWrapper.scrollTop += e.deltaY;
+        
+        // Clear existing timeout
+        if (scrollTimeout) {
+          window.clearTimeout(scrollTimeout);
+        }
+        
+        // Set flag that we're scrolling timeline
+        isScrollingTimeline = true;
+        
+        // Reset flag after scroll stops
+        scrollTimeout = window.setTimeout(() => {
+          isScrollingTimeline = false;
+        }, 150);
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      if (scrollTimeout) {
+        window.clearTimeout(scrollTimeout);
+      }
+    };
+  }, [timelineItems.length]);
 
   const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>) => {
     if (ref.current) {
@@ -324,21 +388,22 @@ export const Home: React.FC = () => {
               <div className="section-empty">Skedule inligting sal binnekort beskikbaar wees.</div>
             ) : (
               <div className="timeline-container">
-                <Timeline
-                  value={timelineItems.map((item, index) => ({
-                    id: item.id,
-                    time: item.time,
-                    title: item.title,
-                    isEven: index % 2 === 1, // Track if it's an even index (second, fourth, etc.)
-                  }))}
-                  layout="horizontal"
-                  content={(item) => (
-                    <div className={`timeline-event ${item.isEven ? 'timeline-event-reversed' : ''}`}>
-                      <div className="timeline-time">{item.time}</div>
-                      <div className="timeline-title">{item.title}</div>
-                    </div>
-                  )}
-                />
+                <div className="timeline-scroll-wrapper" ref={timelineScrollRef}>
+                  <Timeline
+                    value={timelineItems.map((item) => ({
+                      id: item.id,
+                      time: item.time,
+                      title: item.title,
+                    }))}
+                    layout="vertical"
+                    content={(item) => (
+                      <div className="timeline-event">
+                        <div className="timeline-time">{item.time}</div>
+                        <div className="timeline-title">{item.title}</div>
+                      </div>
+                    )}
+                  />
+                </div>
               </div>
             )}
           </div>
