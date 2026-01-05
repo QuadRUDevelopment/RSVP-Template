@@ -23,6 +23,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate }) =>
       const now = new Date().getTime();
       // Ensure we parse the date correctly - handle both ISO strings and timestamps
       const target = new Date(targetDate).getTime();
+      const difference = target - now;
       
       // Debug logging - always log to help debug production issues
       console.log('[CountdownTimer] Target date:', new Date(targetDate).toISOString());
@@ -30,8 +31,6 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate }) =>
       console.log('[CountdownTimer] Target timestamp:', target);
       console.log('[CountdownTimer] Current timestamp:', now);
       console.log('[CountdownTimer] Difference (ms):', difference);
-      
-      const difference = target - now;
 
       if (difference <= 0) {
         console.log('[CountdownTimer] Date has passed, difference:', difference);

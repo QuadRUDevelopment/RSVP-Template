@@ -100,7 +100,7 @@ export const TopNav: React.FC = () => {
           {event?.wedding_date ? (
             <CountdownTimer targetDate={event.wedding_date} />
           ) : (
-            process.env.NODE_ENV === 'development' && (
+            import.meta.env.DEV && (
               <span style={{ fontSize: '0.75rem', opacity: 0.5 }}>
                 No wedding_date
               </span>
@@ -145,7 +145,7 @@ export const TopNav: React.FC = () => {
           {event?.wedding_date ? (
             <CountdownTimer targetDate={event.wedding_date} />
           ) : (
-            process.env.NODE_ENV === 'development' && (
+            import.meta.env.DEV && (
               <span style={{ fontSize: '0.75rem', opacity: 0.5 }}>
                 No wedding_date
               </span>
