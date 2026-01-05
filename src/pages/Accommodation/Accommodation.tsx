@@ -90,9 +90,9 @@ export const Accommodation: React.FC = () => {
       <div className="accommodation-container">
         {step === 'lookup' ? (
           <Card className="lookup-card">
-            <h1>Accommodation Options</h1>
+            <h1>Akkommodasie Opsies</h1>
             <p className="lookup-subtitle">
-              Please enter your name and surname to see personalized accommodation options
+              Voer asseblief jou naam en van in om gepersonaliseerde akkommodasie opsies te sien
             </p>
             <form onSubmit={handleLookup} className="lookup-form">
               <div className="form-group">
@@ -119,16 +119,16 @@ export const Accommodation: React.FC = () => {
               </div>
               {error && <div className="error-message">{error}</div>}
               <Button type="submit" disabled={loading} size="large" className="submit-button">
-                {loading ? 'Looking up...' : 'View Accommodations'}
+                {loading ? 'Soek...' : 'Bekyk Akkommodasie'}
               </Button>
             </form>
           </Card>
         ) : (
           <div className="accommodation-results">
-            <h1>Accommodation Options</h1>
+            <h1>Akkommodasie Opsies</h1>
             {accommodations.length === 0 ? (
               <Card>
-                <p>No accommodation options available for your group at this time.</p>
+                <p>Geen akkommodasie opsies beskikbaar vir jou groep op die oomblik nie.</p>
               </Card>
             ) : (
               <div className="accommodation-grid">

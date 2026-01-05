@@ -71,7 +71,7 @@ export const Venue: React.FC = () => {
     <div className="venue-page">
       <TopNav />
       <div className="venue-container">
-        <h1>Venue</h1>
+        <h1>Plek</h1>
         <Card className="venue-card">
           {event?.venue_name && (
             <h2 className="venue-name">{event.venue_name}</h2>
@@ -130,7 +130,7 @@ export const Venue: React.FC = () => {
             </div>
           )}
           {!event?.venue_text && !event?.venue_address && (
-            <p>Venue information will be available soon.</p>
+            <p>Plek inligting sal binnekort beskikbaar wees.</p>
           )}
         </Card>
       </div>

@@ -94,14 +94,14 @@ export const Menu: React.FC = () => {
     <div className="menu-page">
       <TopNav />
       <div className="menu-container">
-        <h1>Menu</h1>
+        <h1>Spyskaart</h1>
         {error ? (
           <Card>
             <p>Unable to load menu at this time.</p>
           </Card>
         ) : Object.keys(groupedMenu).length === 0 ? (
           <Card>
-            <p>Menu information will be available soon.</p>
+            <p>Spyskaart inligting sal binnekort beskikbaar wees.</p>
           </Card>
         ) : (
           <div className="menu-sections">

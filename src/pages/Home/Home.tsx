@@ -233,7 +233,7 @@ export const Home: React.FC = () => {
           <div className="section-overlay" style={getOverlayStyles('venue') || {}} />
         )}
         <div className="section-content">
-          <h2 className="section-title">Venue</h2>
+          <h2 className="section-title">Plek</h2>
           <div className="venue-content">
             {event?.venue_name && (
               <h3 className="venue-name">{event.venue_name}</h3>
@@ -261,7 +261,7 @@ export const Home: React.FC = () => {
               </div>
             )}
             {!event?.venue_text && !event?.venue_address && (
-              <p className="venue-placeholder">Venue information will be available soon.</p>
+              <p className="venue-placeholder">Plek inligting sal binnekort beskikbaar wees.</p>
             )}
             <Button 
               variant="outline" 
@@ -269,7 +269,7 @@ export const Home: React.FC = () => {
               onClick={() => navigate('/venue')}
               style={{ marginTop: '1.5rem' }}
             >
-              View Full Venue Details
+              Bekyk Volledige Plek Besonderhede
             </Button>
           </div>
         </div>
@@ -286,11 +286,11 @@ export const Home: React.FC = () => {
             <div className="section-overlay" style={getOverlayStyles('schedule') || {}} />
           )}
           <div className="section-content">
-            <h2 className="section-title">Schedule</h2>
+            <h2 className="section-title">Skedule</h2>
             {scheduleLoading ? (
               <div className="section-loading">Loading schedule...</div>
             ) : timelineItems.length === 0 ? (
-              <div className="section-empty">Schedule information will be available soon.</div>
+              <div className="section-empty">Skedule inligting sal binnekort beskikbaar wees.</div>
             ) : (
               <div className="timeline-container">
                 <Timeline

@@ -76,14 +76,14 @@ export const Schedule: React.FC = () => {
     <div className="schedule-page">
       <TopNav />
       <div className="schedule-container">
-        <h1>Schedule</h1>
+        <h1>Skedule</h1>
         {error ? (
           <Card>
             <p>Unable to load schedule at this time.</p>
           </Card>
         ) : timelineItems.length === 0 ? (
           <Card>
-            <p>Schedule information will be available soon.</p>
+            <p>Skedule inligting sal binnekort beskikbaar wees.</p>
           </Card>
         ) : (
           <div className="timeline">

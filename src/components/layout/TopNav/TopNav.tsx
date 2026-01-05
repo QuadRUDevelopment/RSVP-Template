@@ -73,10 +73,10 @@ export const TopNav: React.FC = () => {
   };
 
   const navLinks = [
-    { path: '/accommodation', label: 'Accommodations' },
-    { path: '/venue', label: 'Venue' },
-    ...(event?.menu_enabled !== false ? [{ path: '/menu', label: 'Menu' }] : []),
-    ...(event?.schedule_enabled !== false ? [{ path: '/schedule', label: 'Schedule' }] : []),
+    { path: '/accommodation', label: 'Akkommodasie' },
+    { path: '/venue', label: 'Plek' },
+    ...(event?.menu_enabled !== false ? [{ path: '/menu', label: 'Spyskaart' }] : []),
+    ...(event?.schedule_enabled !== false ? [{ path: '/schedule', label: 'Skedule' }] : []),
   ];
 
   const handleLinkClick = () => {
@@ -155,7 +155,7 @@ export const TopNav: React.FC = () => {
 
         {/* Home logo in center */}
         <Link to="/" className="nav-logo" style={{ color: theme.navFontColor }} onClick={handleLinkClick}>
-          Home
+          Tuis
         </Link>
 
         {/* Desktop: Nav links on right */}
