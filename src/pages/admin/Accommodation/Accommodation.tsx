@@ -83,9 +83,12 @@ export const Accommodation: React.FC = () => {
         <label for="swal-address" style="display: block; font-weight: 500; color: #374151; font-size: 0.875rem; margin-top: 1rem; margin-bottom: 0.5rem;">Address</label>
         <input id="swal-address" class="swal2-custom-input" placeholder="Enter full address" value="${editingItem?.address || ''}">
         <small style="display: block; font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem; margin-bottom: 0.5rem;">Used for Google Maps directions</small>
-        <label for="swal-map-url" style="display: block; font-weight: 500; color: #374151; font-size: 0.875rem; margin-top: 1rem; margin-bottom: 0.5rem;">Google Maps Embed URL</label>
+        <label for="swal-map-url" style="display: block; font-weight: 500; color: #374151; font-size: 0.875rem; margin-top: 1rem; margin-bottom: 0.5rem;">Google Maps Embed URL (Optional)</label>
         <input id="swal-map-url" class="swal2-custom-input" type="url" placeholder="https://www.google.com/maps/embed?pb=..." value="${editingItem?.map_url || ''}">
-        <small style="display: block; font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem; margin-bottom: 0.5rem;">Get embed URL from Google Maps → Share → Embed a map</small>
+        <small style="display: block; font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem; margin-bottom: 0.5rem;">
+          <strong>How to get:</strong> Google Maps → Search venue → Share → Embed a map → Copy iframe src URL<br>
+          <strong style="color: #10b981;">✓ No API key required!</strong> Embeds work without credentials.
+        </small>
         <label for="swal-audience" style="display: block; font-weight: 500; color: #374151; font-size: 0.875rem; margin-top: 1rem; margin-bottom: 0.5rem;">Audience</label>
         <select id="swal-audience" class="swal2-custom-select">
           ${groupOptions}

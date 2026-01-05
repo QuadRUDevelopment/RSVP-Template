@@ -23,6 +23,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <PublicLayout />,
+    errorElement: <div style={{ padding: '2rem', textAlign: 'center' }}><h1>Something went wrong</h1><p>Please try refreshing the page.</p></div>,
     children: [
       { index: true, element: <Home /> },
       { path: 'rsvp', element: <RSVP /> },

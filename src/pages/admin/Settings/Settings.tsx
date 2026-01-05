@@ -268,6 +268,18 @@ export const Settings: React.FC = () => {
               onChange={(e) => handleChange('venue_map_url', e.target.value)}
               placeholder="https://www.google.com/maps/embed?pb=..."
             />
+            <small>
+              <strong>How to get the embed URL:</strong>
+              <ol style={{ marginTop: '0.5rem', paddingLeft: '1.5rem', fontSize: '0.875rem' }}>
+                <li>Go to <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">Google Maps</a></li>
+                <li>Search for your venue address</li>
+                <li>Click the <strong>Share</strong> button</li>
+                <li>Select <strong>"Embed a map"</strong> tab</li>
+                <li>Copy the iframe src URL (starts with <code>https://www.google.com/maps/embed?pb=...</code>)</li>
+                <li>Paste it here</li>
+              </ol>
+              <strong style={{ color: '#10b981' }}>✓ No API key required!</strong> Google Maps embeds work without credentials.
+            </small>
           </div>
           <div className="form-group">
             <label>Venue Text (Display Text)</label>

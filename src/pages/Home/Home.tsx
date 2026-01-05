@@ -156,6 +156,32 @@ export const Home: React.FC = () => {
     }
   };
 
+  // Helper function to extract and validate Google Maps embed URL
+  const getMapUrl = (url: string | undefined): string | null => {
+    if (!url) return null;
+    
+    try {
+      let mapUrl = url.trim();
+      
+      // If it looks like full iframe HTML, extract the src URL
+      const iframeMatch = mapUrl.match(/src=["']([^"']+)["']/);
+      if (iframeMatch) {
+        mapUrl = iframeMatch[1];
+      }
+      
+      // Validate it's a Google Maps embed URL
+      if (!mapUrl.startsWith('https://www.google.com/maps/embed')) {
+        console.warn('Invalid Google Maps embed URL:', mapUrl);
+        return null;
+      }
+      
+      return mapUrl;
+    } catch (err) {
+      console.error('Error parsing map URL:', err);
+      return null;
+    }
+  };
+
   if (useEventStore.getState().loading) {
     return (
       <div className="home-loading">
@@ -246,20 +272,25 @@ export const Home: React.FC = () => {
                 <strong>📍 Address:</strong> {event.venue_address}
               </div>
             )}
-            {event?.venue_map_url && (
-              <div className="venue-map">
-                <iframe
-                  src={event.venue_map_url}
-                  width="100%"
-                  height="400"
-                  style={{ border: 0, borderRadius: '0.5rem' }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Venue Location"
-                />
-              </div>
-            )}
+            {(() => {
+              const mapUrl = getMapUrl(event?.venue_map_url);
+              if (!mapUrl) return null;
+              
+              return (
+                <div className="venue-map">
+                  <iframe
+                    src={mapUrl}
+                    width="100%"
+                    height="400"
+                    style={{ border: 0, borderRadius: '0.5rem' }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Venue Location"
+                  />
+                </div>
+              );
+            })()}
             {!event?.venue_text && !event?.venue_address && (
               <p className="venue-placeholder">Plek inligting sal binnekort beskikbaar wees.</p>
             )}
