@@ -97,8 +97,14 @@ export const TopNav: React.FC = () => {
       <div className="nav-container">
         {/* Desktop: Countdown on left */}
         <div className="nav-left" style={{ color: theme.navFontColor }}>
-          {event?.wedding_date && (
+          {event?.wedding_date ? (
             <CountdownTimer targetDate={event.wedding_date} />
+          ) : (
+            process.env.NODE_ENV === 'development' && (
+              <span style={{ fontSize: '0.75rem', opacity: 0.5 }}>
+                No wedding_date
+              </span>
+            )
           )}
         </div>
 
@@ -136,8 +142,14 @@ export const TopNav: React.FC = () => {
 
         {/* Mobile: Countdown in middle (if enabled) */}
         <div className="nav-mobile-countdown" style={{ color: theme.navFontColor }}>
-          {event?.wedding_date && (
+          {event?.wedding_date ? (
             <CountdownTimer targetDate={event.wedding_date} />
+          ) : (
+            process.env.NODE_ENV === 'development' && (
+              <span style={{ fontSize: '0.75rem', opacity: 0.5 }}>
+                No wedding_date
+              </span>
+            )
           )}
         </div>
 
