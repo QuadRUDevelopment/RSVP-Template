@@ -24,6 +24,7 @@ export interface Event {
   wedding_date?: string; // ISO date string
   site_name?: string;
   site_icon_url?: string;
+  social_sharing_image_url?: string;
   section_backgrounds?: {
     [key: string]: {
       background_image_url?: string;

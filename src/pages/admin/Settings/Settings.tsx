@@ -702,6 +702,25 @@ export const Settings: React.FC = () => {
           <h2>Images</h2>
           <div className="form-group">
             <ImageUpload
+              currentImageUrl={formData.social_sharing_image_url}
+              onUpload={async (url) => handleChange('social_sharing_image_url', url)}
+              folder="social"
+              label="Social Sharing Image"
+            />
+            <small>
+              <strong>Image for Social Media Sharing (WhatsApp, Facebook, etc.)</strong>
+              <ul style={{ marginTop: '0.5rem', paddingLeft: '1.5rem', fontSize: '0.875rem' }}>
+                <li>Recommended size: 1200x630px (1.91:1 ratio)</li>
+                <li>Minimum size: 600x315px</li>
+                <li>Formats: JPG or PNG</li>
+                <li>File size: Under 1MB for best performance</li>
+                <li>This image appears when someone shares your link on social media</li>
+                <li>If not set, will use Hero/Banner Image as fallback</li>
+              </ul>
+            </small>
+          </div>
+          <div className="form-group">
+            <ImageUpload
               currentImageUrl={formData.hero_image_url}
               onUpload={async (url) => handleChange('hero_image_url', url)}
               folder="hero"

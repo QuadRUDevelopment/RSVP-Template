@@ -64,9 +64,9 @@ export const DocumentHead: React.FC = () => {
     const description = event?.invitation_text || event?.story_text || event?.banner_text || 'Join us for a special celebration!';
     updateMetaTag('og:description', description);
     
-    // Image - prefer hero_image_url for social sharing (larger, better for previews)
-    // Fall back to site_icon_url if no hero image
-    const imageUrl = event?.hero_image_url || event?.site_icon_url || '';
+    // Image - prioritize dedicated social sharing image, then hero image, then site icon
+    // Social sharing image should be optimized for social media (1200x630px recommended)
+    const imageUrl = event?.social_sharing_image_url || event?.hero_image_url || event?.site_icon_url || '';
     if (imageUrl) {
       updateMetaTag('og:image', imageUrl);
       updateMetaTag('og:image:width', '1200');
