@@ -23,13 +23,13 @@ export function getEventSlugFromHostname(): string | null {
     // Fall through to query param check
   }
   
-  // If it's the base domain (e.g., quadrursvp.co.za), return null or default
-  const baseDomains = ['quadrursvp.co.za', 'localhost', '127.0.0.1'];
+  // If it's the base domain (e.g., quadrursvp.site, quadrursvp.co.za), return null or default
+  const baseDomains = ['quadrursvp.site', 'quadrursvp.co.za', 'localhost', '127.0.0.1'];
   if (baseDomains.some(domain => cleanHostname === domain || cleanHostname.endsWith(`.${domain}`))) {
     // Extract subdomain
     const parts = cleanHostname.split('.');
     if (parts.length > 2) {
-      // Has subdomain (e.g., wiehanmoniquebruiloif.quadrursvp.co.za)
+      // Has subdomain (e.g., viljoenbruilof.quadrursvp.site)
       return parts[0];
     }
     // Base domain - return null (will need to handle default event)
