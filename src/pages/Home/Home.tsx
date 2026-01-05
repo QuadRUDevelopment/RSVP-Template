@@ -156,7 +156,6 @@ export const Home: React.FC = () => {
     if (!timelineScrollRef.current || timelineItems.length === 0) return;
 
     const timelineWrapper = timelineScrollRef.current;
-    let isScrollingTimeline = false;
     let scrollTimeout: number | null = null;
 
     const handleWheel = (e: WheelEvent) => {
@@ -194,12 +193,9 @@ export const Home: React.FC = () => {
           window.clearTimeout(scrollTimeout);
         }
         
-        // Set flag that we're scrolling timeline
-        isScrollingTimeline = true;
-        
-        // Reset flag after scroll stops
+        // Reset timeout after scroll stops (for cleanup)
         scrollTimeout = window.setTimeout(() => {
-          isScrollingTimeline = false;
+          // Timeout cleared, ready for next scroll
         }, 150);
       }
     };
