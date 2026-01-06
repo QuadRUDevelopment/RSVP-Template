@@ -143,7 +143,7 @@ export const GiftRegistry: React.FC = () => {
     }
   };
 
-  const handleReleaseBooking = async (giftId: string) => {
+  const handleReleaseBooking = async (_giftId: string) => {
     if (!token) return;
     const result = await Swal.fire({
       ...getSwalConfig(),
