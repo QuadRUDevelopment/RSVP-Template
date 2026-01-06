@@ -65,10 +65,11 @@
 }
 
 .banner-title {
-  font-size: 4rem;
+  font-size: 4rem; /* Default, will be overridden by inline styles */
   font-weight: 700;
   margin-bottom: 2rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Default, will be overridden by inline styles */
+  transition: font-size 0.3s ease, color 0.3s ease, text-shadow 0.3s ease;
 }
 
 .scroll-indicator {
@@ -687,7 +688,12 @@
 
 @media (max-width: 768px) {
   .banner-title {
-    font-size: 2.5rem;
+    font-size: 2.5rem; /* Default for mobile */
+  }
+  
+  /* Scale down custom font sizes on mobile (maintains proportion ~62.5%) */
+  .banner-title[style*="--banner-font-size"] {
+    font-size: calc(var(--banner-font-size, 64px) * 0.625) !important; /* 64px * 0.625 = 40px */
   }
   
   .section-title {

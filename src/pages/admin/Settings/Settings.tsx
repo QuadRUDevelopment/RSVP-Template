@@ -180,6 +180,132 @@ export const Settings: React.FC = () => {
         </Card>
 
         <Card className="settings-section">
+          <h2>Banner Text Styling</h2>
+          <div className="form-group">
+            <label>Font Size (pixels)</label>
+            <input
+              type="number"
+              value={formData.banner_text_font_size ?? 64}
+              onChange={(e) => handleChange('banner_text_font_size', parseInt(e.target.value) || 64)}
+              min="24"
+              max="120"
+              placeholder="64"
+            />
+            <small>Recommended: 48-80px. Default: 64px (4rem)</small>
+          </div>
+          <div className="form-group">
+            <label>Text Color</label>
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <input
+                type="color"
+                value={formData.banner_text_color || '#ffffff'}
+                onChange={(e) => handleChange('banner_text_color', e.target.value)}
+                style={{ width: '60px', height: '40px', cursor: 'pointer' }}
+              />
+              <input
+                type="text"
+                value={formData.banner_text_color || '#ffffff'}
+                onChange={(e) => handleChange('banner_text_color', e.target.value)}
+                placeholder="#ffffff"
+                style={{ flex: 1 }}
+              />
+            </div>
+            <small>Hex color code (e.g., #ffffff for white)</small>
+          </div>
+          <div className="form-group">
+            <label>
+              <input
+                type="checkbox"
+                checked={formData.banner_text_shadow_enabled !== false}
+                onChange={(e) => handleChange('banner_text_shadow_enabled', e.target.checked)}
+              />
+              {' '}Enable Text Shadow
+            </label>
+          </div>
+          {formData.banner_text_shadow_enabled !== false && (
+            <>
+              <div className="form-group">
+                <label>Shadow Horizontal Offset (pixels)</label>
+                <input
+                  type="number"
+                  value={formData.banner_text_shadow_x ?? 2}
+                  onChange={(e) => handleChange('banner_text_shadow_x', parseInt(e.target.value) || 0)}
+                  min="-20"
+                  max="20"
+                  placeholder="2"
+                />
+              </div>
+              <div className="form-group">
+                <label>Shadow Vertical Offset (pixels)</label>
+                <input
+                  type="number"
+                  value={formData.banner_text_shadow_y ?? 2}
+                  onChange={(e) => handleChange('banner_text_shadow_y', parseInt(e.target.value) || 0)}
+                  min="-20"
+                  max="20"
+                  placeholder="2"
+                />
+              </div>
+              <div className="form-group">
+                <label>Shadow Blur Radius (pixels)</label>
+                <input
+                  type="number"
+                  value={formData.banner_text_shadow_blur ?? 4}
+                  onChange={(e) => handleChange('banner_text_shadow_blur', parseInt(e.target.value) || 0)}
+                  min="0"
+                  max="20"
+                  placeholder="4"
+                />
+              </div>
+              <div className="form-group">
+                <label>Shadow Color</label>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <input
+                    type="color"
+                    value={(() => {
+                      const shadowColor = formData.banner_text_shadow_color || 'rgba(0, 0, 0, 0.5)';
+                      // Extract RGB from rgba string
+                      const rgbaMatch = shadowColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+                      if (rgbaMatch) {
+                        const r = parseInt(rgbaMatch[1]).toString(16).padStart(2, '0');
+                        const g = parseInt(rgbaMatch[2]).toString(16).padStart(2, '0');
+                        const b = parseInt(rgbaMatch[3]).toString(16).padStart(2, '0');
+                        return `#${r}${g}${b}`;
+                      }
+                      // If it's already hex, return it
+                      if (shadowColor.startsWith('#')) {
+                        return shadowColor;
+                      }
+                      return '#000000';
+                    })()}
+                    onChange={(e) => {
+                      const hex = e.target.value;
+                      const r = parseInt(hex.slice(1, 3), 16);
+                      const g = parseInt(hex.slice(3, 5), 16);
+                      const b = parseInt(hex.slice(5, 7), 16);
+                      // Preserve existing opacity if it was rgba, otherwise use 0.5
+                      const existingColor = formData.banner_text_shadow_color || 'rgba(0, 0, 0, 0.5)';
+                      const opacityMatch = existingColor.match(/rgba?\([^)]+,\s*([\d.]+)\)/);
+                      const opacity = opacityMatch ? opacityMatch[1] : '0.5';
+                      handleChange('banner_text_shadow_color', `rgba(${r}, ${g}, ${b}, ${opacity})`);
+                    }}
+                    style={{ width: '60px', height: '40px', cursor: 'pointer' }}
+                  />
+                  <input
+                    type="text"
+                    value={formData.banner_text_shadow_color || 'rgba(0, 0, 0, 0.5)'}
+                    onChange={(e) => handleChange('banner_text_shadow_color', e.target.value)}
+                    placeholder="rgba(0, 0, 0, 0.5)"
+                    style={{ flex: 1 }}
+                  />
+                </div>
+                <small>RGBA color (e.g., rgba(0, 0, 0, 0.5) for semi-transparent black) or hex color</small>
+              </div>
+            </>
+          )}
+        </Card>
+
+        <Card className="settings-section">
           <h2>Story Content</h2>
           <div className="form-group">
             <label>Invitation Text</label>

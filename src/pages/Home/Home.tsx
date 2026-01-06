@@ -267,7 +267,21 @@ export const Home: React.FC = () => {
           <div className="banner-overlay" />
         )}
         <div className="banner-content">
-          {event?.title && <h1 className="banner-title">{event.title}</h1>}
+          {(event?.banner_text || event?.title) && (
+            <h1 
+              className="banner-title"
+              style={{
+                '--banner-font-size': `${event.banner_text_font_size || 64}px`,
+                fontSize: `${event.banner_text_font_size || 64}px`,
+                color: event.banner_text_color || '#ffffff',
+                textShadow: event.banner_text_shadow_enabled !== false
+                  ? `${event.banner_text_shadow_x || 2}px ${event.banner_text_shadow_y || 2}px ${event.banner_text_shadow_blur || 4}px ${event.banner_text_shadow_color || 'rgba(0, 0, 0, 0.5)'}`
+                  : 'none',
+              } as React.CSSProperties}
+            >
+              {event.banner_text || event.title}
+            </h1>
+          )}
           <div className="scroll-indicator" onClick={() => scrollToSection(storyRef)}>
             <span>Scroll down</span>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">

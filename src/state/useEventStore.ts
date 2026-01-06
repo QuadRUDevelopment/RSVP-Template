@@ -5,6 +5,13 @@ export interface Event {
   slug: string;
   title: string;
   banner_text?: string;
+  banner_text_font_size?: number; // in pixels
+  banner_text_color?: string; // hex color
+  banner_text_shadow_enabled?: boolean;
+  banner_text_shadow_x?: number; // horizontal offset in pixels
+  banner_text_shadow_y?: number; // vertical offset in pixels
+  banner_text_shadow_blur?: number; // blur radius in pixels
+  banner_text_shadow_color?: string; // shadow color
   date_text?: string;
   venue_text?: string;
   dress_code?: string;
