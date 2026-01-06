@@ -310,13 +310,59 @@ export const GiftRegistry: React.FC = () => {
 
         if (!result.isConfirmed) return;
 
-        // Import gifts (create or update)
+        // Import gifts (create or update) with progress
         const slug = getCurrentEventSlug();
+        const totalGifts = transformedData.length;
         let successCount = 0;
         let errorCount = 0;
         const errors: string[] = [];
 
-        for (const giftData of transformedData) {
+        // Show progress modal
+        Swal.fire({
+          ...getSwalConfig(),
+          title: 'Importing Gifts...',
+          html: `
+            <div style="text-align: center;">
+              <div style="margin-bottom: 1rem;">
+                <div style="width: 100%; height: 20px; background: #e5e7eb; border-radius: 10px; overflow: hidden;">
+                  <div id="progress-bar" style="width: 0%; height: 100%; background: #2563eb; transition: width 0.3s; border-radius: 10px;"></div>
+                </div>
+              </div>
+              <p id="progress-text" style="color: #6b7280; font-size: 0.875rem; margin: 0;">
+                Processing 0 of ${totalGifts} gifts...
+              </p>
+              <p id="progress-details" style="color: #9ca3af; font-size: 0.75rem; margin-top: 0.5rem;">
+                Success: 0 | Errors: 0
+              </p>
+            </div>
+          `,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+        });
+
+        // Update progress function
+        const updateProgress = (current: number, success: number, error: number) => {
+          const percentage = Math.round((current / totalGifts) * 100);
+          const progressBar = document.getElementById('progress-bar');
+          const progressText = document.getElementById('progress-text');
+          const progressDetails = document.getElementById('progress-details');
+          
+          if (progressBar) {
+            progressBar.style.width = `${percentage}%`;
+          }
+          if (progressText) {
+            progressText.textContent = `Processing ${current} of ${totalGifts} gifts...`;
+          }
+          if (progressDetails) {
+            progressDetails.textContent = `Success: ${success} | Errors: ${error}`;
+          }
+        };
+
+        for (let i = 0; i < transformedData.length; i++) {
+          const giftData = transformedData[i];
+          const currentIndex = i + 1;
+          
           try {
             // Check if gift exists (by name)
             const existingGift = gifts.find(
@@ -349,7 +395,16 @@ export const GiftRegistry: React.FC = () => {
             errorCount++;
             errors.push(`${giftData.name}: ${err.message}`);
           }
+          
+          // Update progress
+          updateProgress(currentIndex, successCount, errorCount);
+          
+          // Small delay to allow UI to update
+          await new Promise(resolve => setTimeout(resolve, 50));
         }
+
+        // Close progress modal
+        Swal.close();
 
         // Show results
         if (errorCount === 0) {
