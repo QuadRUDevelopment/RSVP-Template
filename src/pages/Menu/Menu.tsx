@@ -29,6 +29,21 @@ export const Menu: React.FC = () => {
     loadEvent();
   }, [event, setEvent]);
 
+  // Check if menu feature is disabled
+  if (event && event.menu_enabled === false) {
+    return (
+      <div className="menu-page">
+        <TopNav />
+        <div className="menu-container">
+          <Card className="menu-section">
+            <h1>Spyskaart</h1>
+            <p>Hierdie afdeling is nie beskikbaar vir hierdie geleentheid nie.</p>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   // Helper to convert hex to RGB
   const hexToRgb = (hex: string): string => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);

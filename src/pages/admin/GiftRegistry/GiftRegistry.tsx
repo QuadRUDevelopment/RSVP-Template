@@ -11,19 +11,19 @@ import { useAdminAuth } from '../../../state/useAdminAuth';
 import { useEventStore } from '../../../state/useEventStore';
 import '../Accommodation/Accommodation.css';
 
-export const Menu: React.FC = () => {
+export const GiftRegistry: React.FC = () => {
   const { token } = useAdminAuth();
   const { event } = useEventStore();
-  const [items, setItems] = useState<any[]>([]);
+  const [gifts, setGifts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Check if menu feature is disabled
-  if (event && event.menu_enabled === false) {
+  // Check if gift registry feature is disabled
+  if (event && event.gift_registry_enabled === false) {
     return (
       <div style={{ padding: '2rem' }}>
         <Card>
-          <h2>Menu Feature Disabled</h2>
-          <p>This feature is currently disabled. Enable it in Settings to manage menu items.</p>
+          <h2>Gift Registry Feature Disabled</h2>
+          <p>This feature is currently disabled. Enable it in Settings to manage gifts.</p>
           <Link to="/admin/settings">
             <Button variant="primary">Go to Settings</Button>
           </Link>
@@ -33,60 +33,48 @@ export const Menu: React.FC = () => {
   }
 
   useEffect(() => {
-    loadItems();
+    loadGifts();
   }, [token]);
 
-  const loadItems = async () => {
+  const loadGifts = async () => {
     if (!token) return;
     setLoading(true);
     try {
       const slug = getCurrentEventSlug();
       const data = await adminRequest(
-        `admin-menu?slug=${encodeURIComponent(slug)}`,
+        `admin-gift-registry?slug=${encodeURIComponent(slug)}`,
         { method: 'GET' },
         token
       );
-      setItems(data.menuItems || []);
+      setGifts(data.gifts || []);
     } catch (err) {
-      console.error('Failed to load menu items:', err);
+      console.error('Failed to load gifts:', err);
     } finally {
       setLoading(false);
     }
   };
 
   const handleAdd = () => {
-    showMenuForm();
+    showGiftForm();
   };
 
-  const handleEdit = (item: any) => {
-    showMenuForm(item);
+  const handleEdit = (gift: any) => {
+    showGiftForm(gift);
   };
 
-  const showMenuForm = async (editingItem: any = null) => {
-    const dietTagsStr = editingItem?.diet_tags && Array.isArray(editingItem.diet_tags) 
-      ? editingItem.diet_tags.join(', ') 
-      : '';
-
+  const showGiftForm = async (editingGift: any = null) => {
     const { value: formValues } = await Swal.fire({
       ...getSwalConfig(),
-      title: editingItem ? 'Edit Menu Item' : 'Add Menu Item',
+      title: editingGift ? 'Edit Gift' : 'Add Gift',
       html: `
-        <label for="swal-category" style="display: block; font-weight: 500; color: #374151; font-size: 0.875rem; margin-bottom: 0.5rem;">Category *</label>
-        <select id="swal-category" class="swal2-custom-select">
-          <option value="Starter" ${editingItem?.category === 'Starter' ? 'selected' : ''}>Starter</option>
-          <option value="Main" ${!editingItem || editingItem?.category === 'Main' ? 'selected' : ''}>Main</option>
-          <option value="Dessert" ${editingItem?.category === 'Dessert' ? 'selected' : ''}>Dessert</option>
-          <option value="Drinks" ${editingItem?.category === 'Drinks' ? 'selected' : ''}>Drinks</option>
-          <option value="Other" ${editingItem?.category === 'Other' ? 'selected' : ''}>Other</option>
-        </select>
-        <label for="swal-name" style="display: block; font-weight: 500; color: #374151; font-size: 0.875rem; margin-top: 1rem; margin-bottom: 0.5rem;">Name *</label>
-        <input id="swal-name" class="swal2-custom-input" placeholder="Enter menu item name" value="${editingItem?.name || ''}" required>
+        <label for="swal-name" style="display: block; font-weight: 500; color: #374151; font-size: 0.875rem; margin-bottom: 0.5rem;">Name *</label>
+        <input id="swal-name" class="swal2-custom-input" placeholder="Enter gift name" value="${editingGift?.name || ''}" required>
         <label for="swal-description" style="display: block; font-weight: 500; color: #374151; font-size: 0.875rem; margin-top: 1rem; margin-bottom: 0.5rem;">Description</label>
-        <textarea id="swal-description" class="swal2-custom-textarea" placeholder="Enter description">${editingItem?.description || ''}</textarea>
-        <label for="swal-diet-tags" style="display: block; font-weight: 500; color: #374151; font-size: 0.875rem; margin-top: 1rem; margin-bottom: 0.5rem;">Dietary Tags</label>
-        <input id="swal-diet-tags" class="swal2-custom-input" placeholder="Comma-separated (e.g., vegan, vegetarian, gluten-free)" value="${dietTagsStr}">
+        <textarea id="swal-description" class="swal2-custom-textarea" placeholder="Enter gift description">${editingGift?.description || ''}</textarea>
+        <label for="swal-url" style="display: block; font-weight: 500; color: #374151; font-size: 0.875rem; margin-top: 1rem; margin-bottom: 0.5rem;">Registry URL</label>
+        <input id="swal-url" class="swal2-custom-input" type="url" placeholder="https://example.com/registry" value="${editingGift?.url || ''}">
         <label for="swal-sort" style="display: block; font-weight: 500; color: #374151; font-size: 0.875rem; margin-top: 1rem; margin-bottom: 0.5rem;">Sort Order</label>
-        <input id="swal-sort" class="swal2-custom-input" type="number" placeholder="0" value="${editingItem?.sort_order || 0}">
+        <input id="swal-sort" class="swal2-custom-input" type="number" placeholder="0" value="${editingGift?.sort_order || 0}">
       `,
       showCancelButton: true,
       preConfirm: () => {
@@ -95,13 +83,10 @@ export const Menu: React.FC = () => {
           Swal.showValidationMessage('Name is required');
           return false;
         }
-        const dietTagsInput = (document.getElementById('swal-diet-tags') as HTMLInputElement)?.value || '';
-        const dietTags = dietTagsInput.split(',').map(t => t.trim()).filter(t => t.length > 0);
         return {
-          category: (document.getElementById('swal-category') as HTMLSelectElement)?.value || 'Main',
           name,
           description: (document.getElementById('swal-description') as HTMLTextAreaElement)?.value || '',
-          diet_tags: dietTags,
+          url: (document.getElementById('swal-url') as HTMLInputElement)?.value || '',
           sort_order: parseInt((document.getElementById('swal-sort') as HTMLInputElement)?.value || '0'),
         };
       },
@@ -111,18 +96,18 @@ export const Menu: React.FC = () => {
       if (!token) return;
       try {
         const slug = getCurrentEventSlug();
-        if (editingItem) {
+        if (editingGift) {
           await adminRequest(
-            'admin-menu',
+            'admin-gift-registry',
             {
-              method: 'PUT',
-              body: JSON.stringify({ id: editingItem.id, ...formValues }),
+              method: 'POST',
+              body: JSON.stringify({ id: editingGift.id, slug, ...formValues }),
             },
             token
           );
         } else {
           await adminRequest(
-            'admin-menu',
+            'admin-gift-registry',
             {
               method: 'POST',
               body: JSON.stringify({ slug, ...formValues }),
@@ -130,8 +115,8 @@ export const Menu: React.FC = () => {
             token
           );
         }
-        await createSuccessModal('Success!', 'Menu item saved successfully.');
-        loadItems();
+        await createSuccessModal('Success!', 'Gift saved successfully.');
+        loadGifts();
       } catch (err: any) {
         await createErrorModal('Error', `Failed to save: ${err.message}`);
       }
@@ -144,28 +129,68 @@ export const Menu: React.FC = () => {
 
     if (result.isConfirmed) {
       try {
+        const slug = getCurrentEventSlug();
         await adminRequest(
-          `admin-menu?id=${id}`,
+          `admin-gift-registry?slug=${encodeURIComponent(slug)}&id=${id}`,
           { method: 'DELETE' },
           token
         );
-        await createSuccessModal('Deleted!', 'Menu item has been deleted.');
-        loadItems();
+        await createSuccessModal('Deleted!', 'Gift has been deleted.');
+        loadGifts();
       } catch (err: any) {
         await createErrorModal('Error', `Failed to delete: ${err.message}`);
       }
     }
   };
 
+  const handleReleaseBooking = async (giftId: string) => {
+    if (!token) return;
+    const result = await Swal.fire({
+      ...getSwalConfig(),
+      title: 'Release Booking?',
+      text: 'This will make the gift available for booking again.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, release it',
+      cancelButtonText: 'Cancel',
+    });
+
+    if (result.isConfirmed) {
+      try {
+        // TODO: Add release booking API endpoint
+        // For now, we'll need to manually delete the booking
+        await createErrorModal('Not Implemented', 'Release booking feature will be available soon.');
+      } catch (err: any) {
+        await createErrorModal('Error', `Failed to release booking: ${err.message}`);
+      }
+    }
+  };
+
   const columns = [
-    { key: 'category', label: 'Category', sortable: true, filterable: true },
     { key: 'name', label: 'Name', sortable: true, filterable: true },
     { key: 'description', label: 'Description', filterable: true },
     {
-      key: 'diet_tags',
-      label: 'Diet Tags',
-      filterable: true,
-      render: (value: any) => (value && Array.isArray(value) ? value.join(', ') : '-'),
+      key: 'url',
+      label: 'URL',
+      render: (value: string) => value ? (
+        <a href={value} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>
+          View Registry
+        </a>
+      ) : '-',
+    },
+    {
+      key: 'booked',
+      label: 'Status',
+      render: (value: boolean, row: any) => {
+        if (value && row.booked_by) {
+          return (
+            <span style={{ color: '#dc2626', fontWeight: 500 }}>
+              Booked by: {row.booked_by.guest_name}
+            </span>
+          );
+        }
+        return <span style={{ color: '#16a34a', fontWeight: 500 }}>Available</span>;
+      },
     },
     { key: 'sort_order', label: 'Order', sortable: true },
   ];
@@ -173,16 +198,16 @@ export const Menu: React.FC = () => {
   return (
     <div className="accommodation-admin-page">
       <div className="page-header">
-        <h1>Menu Management</h1>
+        <h1>Gift Registry Management</h1>
         <Button variant="primary" onClick={handleAdd}>
-          Add Menu Item
+          Add Gift
         </Button>
       </div>
 
       <Card>
         <DataTable
           columns={columns}
-          data={items}
+          data={gifts}
           onRowClick={handleEdit}
           onDelete={handleDelete}
           loading={loading}

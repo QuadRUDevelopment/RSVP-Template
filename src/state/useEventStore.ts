@@ -21,6 +21,9 @@ export interface Event {
   venue_map_url?: string;
   menu_enabled?: boolean;
   schedule_enabled?: boolean;
+  accommodation_enabled?: boolean;
+  gift_registry_enabled?: boolean;
+  max_gifts_per_guest?: number;
   wedding_date?: string; // ISO date string
   site_name?: string;
   site_icon_url?: string;

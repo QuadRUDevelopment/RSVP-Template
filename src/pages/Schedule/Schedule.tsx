@@ -37,6 +37,21 @@ export const Schedule: React.FC = () => {
     }
   }, [event, theme]);
 
+  // Check if schedule feature is disabled
+  if (event && event.schedule_enabled === false) {
+    return (
+      <div className="schedule-page">
+        <TopNav />
+        <div className="schedule-container">
+          <Card className="schedule-section">
+            <h1>Skedule</h1>
+            <p>Hierdie afdeling is nie beskikbaar vir hierdie geleentheid nie.</p>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   useEffect(() => {
     const loadSchedule = async () => {
       setLoading(true);

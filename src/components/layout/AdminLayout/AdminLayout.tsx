@@ -1,11 +1,13 @@
 import React from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../../../state/useAdminAuth';
+import { useEventStore } from '../../../state/useEventStore';
 import './AdminLayout.css';
 
 export const AdminLayout: React.FC = () => {
   const { logout } = useAdminAuth();
   const navigate = useNavigate();
+  const { event } = useEventStore();
 
   const handleLogout = () => {
     logout();
@@ -21,9 +23,18 @@ export const AdminLayout: React.FC = () => {
         <nav className="sidebar-nav">
           <Link to="/admin/dashboard" className="nav-item">Dashboard</Link>
           <Link to="/admin/guests" className="nav-item">Guests</Link>
-          <Link to="/admin/accommodation" className="nav-item">Accommodation</Link>
-          <Link to="/admin/menu" className="nav-item">Menu</Link>
-          <Link to="/admin/timeline" className="nav-item">Timeline</Link>
+          {event?.accommodation_enabled !== false && (
+            <Link to="/admin/accommodation" className="nav-item">Accommodation</Link>
+          )}
+          {event?.menu_enabled !== false && (
+            <Link to="/admin/menu" className="nav-item">Menu</Link>
+          )}
+          {event?.schedule_enabled !== false && (
+            <Link to="/admin/timeline" className="nav-item">Timeline</Link>
+          )}
+          {event?.gift_registry_enabled === true && (
+            <Link to="/admin/gift-registry" className="nav-item">Gift Registry</Link>
+          )}
           <Link to="/admin/gallery" className="nav-item">Gallery</Link>
           <Link to="/admin/groups" className="nav-item">Groups</Link>
           <Link to="/admin/custom-fields" className="nav-item">Custom RSVP Fields</Link>

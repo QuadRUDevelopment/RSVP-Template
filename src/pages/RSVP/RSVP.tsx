@@ -160,7 +160,7 @@ export const RSVP: React.FC = () => {
             <RSVPForm
               guest={guestData.guest}
               rsvp={guestData.rsvp}
-              menuItems={guestData.menuItems}
+              menuItems={event?.menu_enabled !== false ? guestData.menuItems : []}
               onSubmit={handleRSVPSubmit}
             />
           </div>

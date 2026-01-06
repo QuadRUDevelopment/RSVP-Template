@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { getSwalConfig, createSuccessModal, createErrorModal, createDeleteModal } from '../../../lib/sweetalert2Config';
 import { Card } from '../../../components/ui/Card/Card';
@@ -7,12 +8,29 @@ import { DataTable } from '../../../components/ui/DataTable/DataTable';
 import { getCurrentEventSlug } from '../../../lib/eventResolver';
 import { adminRequest, fetchGroups } from '../../../lib/apiClient';
 import { useAdminAuth } from '../../../state/useAdminAuth';
+import { useEventStore } from '../../../state/useEventStore';
 import './Accommodation.css';
 
 export const Accommodation: React.FC = () => {
   const { token } = useAdminAuth();
+  const { event } = useEventStore();
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Check if accommodation feature is disabled
+  if (event && event.accommodation_enabled === false) {
+    return (
+      <div style={{ padding: '2rem' }}>
+        <Card>
+          <h2>Accommodation Feature Disabled</h2>
+          <p>This feature is currently disabled. Enable it in Settings to manage accommodations.</p>
+          <Link to="/admin/settings">
+            <Button variant="primary">Go to Settings</Button>
+          </Link>
+        </Card>
+      </div>
+    );
+  }
 
   useEffect(() => {
     loadItems();

@@ -33,6 +33,21 @@ export const Accommodation: React.FC = () => {
     loadEvent();
   }, [event, setEvent]);
 
+  // Check if accommodation feature is disabled
+  if (event && event.accommodation_enabled === false) {
+    return (
+      <div className="accommodation-page">
+        <TopNav />
+        <div className="accommodation-container">
+          <Card className="accommodation-section">
+            <h1>Akkommodasie</h1>
+            <p>Hierdie afdeling is nie beskikbaar vir hierdie geleentheid nie.</p>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   // Helper to convert hex to RGB
   const hexToRgb = (hex: string): string => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);

@@ -81,10 +81,11 @@ export const TopNav: React.FC = () => {
   };
 
   const navLinks = [
-    { path: '/accommodation', label: 'Akkommodasie' },
+    ...(event?.accommodation_enabled !== false ? [{ path: '/accommodation', label: 'Akkommodasie' }] : []),
     { path: '/venue', label: 'Plek' },
     ...(event?.menu_enabled !== false ? [{ path: '/menu', label: 'Spyskaart' }] : []),
     ...(event?.schedule_enabled !== false ? [{ path: '/schedule', label: 'Skedule' }] : []),
+    ...(event?.gift_registry_enabled === true ? [{ path: '/gift-registry', label: 'Gift Registry' }] : []),
   ];
 
   const handleLinkClick = () => {

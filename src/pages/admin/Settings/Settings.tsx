@@ -707,6 +707,49 @@ export const Settings: React.FC = () => {
             </label>
             <small>When enabled, the Schedule link appears in the top navigation. When disabled, it's hidden.</small>
           </div>
+          <div className="form-group" style={{ marginTop: '1.5rem' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={formData.accommodation_enabled !== false}
+                onChange={(e) => handleChange('accommodation_enabled', e.target.checked)}
+                style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+              />
+              <span>Enable Accommodation Feature</span>
+            </label>
+            <small>When enabled, the Accommodation link appears in the top navigation. When disabled, it's hidden.</small>
+          </div>
+          <div className="form-group" style={{ marginTop: '1.5rem' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={formData.gift_registry_enabled === true}
+                onChange={(e) => handleChange('gift_registry_enabled', e.target.checked)}
+                style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+              />
+              <span>Enable Gift Registry Feature</span>
+            </label>
+            <small>When enabled, guests can browse and book gifts from the registry. When disabled, it's hidden.</small>
+          </div>
+          {formData.gift_registry_enabled && (
+            <div className="form-group" style={{ marginTop: '1.5rem', marginLeft: '2rem' }}>
+              <label htmlFor="max_gifts_per_guest" style={{ display: 'block', marginBottom: '0.5rem' }}>
+                Maximum Gifts Per Guest
+              </label>
+              <input
+                id="max_gifts_per_guest"
+                type="number"
+                min="0"
+                max="10"
+                value={formData.max_gifts_per_guest ?? 1}
+                onChange={(e) => handleChange('max_gifts_per_guest', parseInt(e.target.value) || 1)}
+                style={{ width: '100px', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid #d1d5db' }}
+              />
+              <small style={{ display: 'block', marginTop: '0.5rem', color: '#6b7280' }}>
+                Set to 1 for one gift per guest (most common), 2 for two gifts, etc. Set to 0 for unlimited (not recommended).
+              </small>
+            </div>
+          )}
         </Card>
 
 

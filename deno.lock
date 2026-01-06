@@ -16,6 +16,7 @@
         "npm:@supabase/supabase-js@^2.89.0",
         "npm:@types/jsonwebtoken@^9.0.10",
         "npm:@types/node@^24.10.4",
+        "npm:@types/react-datepicker@^6.2.0",
         "npm:@types/react-dom@^19.2.3",
         "npm:@types/react@^19.2.5",
         "npm:@vitejs/plugin-react@^5.1.1",
@@ -26,12 +27,17 @@
         "npm:globals@^16.5.0",
         "npm:jsonwebtoken@^9.0.3",
         "npm:netlify-cli@^23.13.0",
+        "npm:primeicons@7",
+        "npm:primereact@^10.9.7",
+        "npm:react-datepicker@^9.1.0",
         "npm:react-dom@^19.2.0",
         "npm:react-router-dom@^7.11.0",
         "npm:react@^19.2.0",
+        "npm:sweetalert2@^11.26.17",
         "npm:typescript-eslint@^8.46.4",
         "npm:typescript@~5.9.3",
         "npm:vite@^7.2.4",
+        "npm:xlsx@~0.18.5",
         "npm:zustand@^5.0.9"
       ]
     }

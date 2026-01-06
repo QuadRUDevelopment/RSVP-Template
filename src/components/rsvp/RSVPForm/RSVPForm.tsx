@@ -185,6 +185,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({
                 id="mealChoice"
                 value={mealChoiceId}
                 onChange={(e) => setMealChoiceId(e.target.value)}
+                disabled={menuItems.length === 0}
               >
                 <option value="">Select a meal</option>
                 {menuItems.map((item) => (

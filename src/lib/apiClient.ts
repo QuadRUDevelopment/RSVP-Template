@@ -6,11 +6,17 @@
 const getApiBase = () => {
   if (import.meta.env.DEV) {
     // If running on port 8888, we're using netlify dev (functions are on same origin)
-    if (window.location.port === '8888' || window.location.hostname === 'localhost' && window.location.port === '') {
+    if (window.location.port === '8888' || (window.location.hostname === 'localhost' && window.location.port === '')) {
       return '/.netlify/functions';
     }
-    // Otherwise, Vite is on 5173, functions on 8888
-    return 'http://localhost:8888/.netlify/functions';
+    // Check if we're on port 5173 (Vite dev server)
+    if (window.location.port === '5173') {
+      // Try to connect to Netlify Functions on 8888
+      // If it fails, the error will be caught and handled gracefully
+      return 'http://localhost:8888/.netlify/functions';
+    }
+    // Default: same origin (for production or other setups)
+    return '/.netlify/functions';
   }
   return '/.netlify/functions';
 };
@@ -42,11 +48,20 @@ export interface AdminLoginRequest {
 }
 
 export async function fetchPublicEvent(slug: string) {
-  const response = await fetch(`${API_BASE}/public-event?slug=${encodeURIComponent(slug)}`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch event: ${response.statusText}`);
+  try {
+    const response = await fetch(`${API_BASE}/public-event?slug=${encodeURIComponent(slug)}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch event: ${response.statusText}`);
+    }
+    return response.json();
+  } catch (error: any) {
+    // If connection refused, provide helpful error message
+    if (error.message?.includes('Failed to fetch') || error.name === 'TypeError') {
+      console.warn('Netlify Functions server not running. Please run "netlify dev" to start the server.');
+      throw new Error('Netlify Functions server is not running. Please start it with "netlify dev"');
+    }
+    throw error;
   }
-  return response.json();
 }
 
 export async function fetchPublicMenu(slug: string) {
@@ -69,6 +84,67 @@ export async function fetchPublicGallery(slug: string) {
   const response = await fetch(`${API_BASE}/public-gallery?slug=${encodeURIComponent(slug)}`);
   if (!response.ok) {
     throw new Error(`Failed to fetch gallery: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+export async function fetchPublicGiftRegistry(slug: string) {
+  const response = await fetch(`${API_BASE}/public-gift-registry?slug=${encodeURIComponent(slug)}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch gift registry: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+export async function getGuestGiftBookings(slug: string, inviteCode?: string, firstName?: string, lastName?: string) {
+  const response = await fetch(`${API_BASE}/gift-booking?slug=${encodeURIComponent(slug)}${inviteCode ? `&inviteCode=${encodeURIComponent(inviteCode)}` : ''}${firstName ? `&firstName=${encodeURIComponent(firstName)}` : ''}${lastName ? `&lastName=${encodeURIComponent(lastName)}` : ''}`, {
+    method: 'GET',
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || `Failed to fetch bookings: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+export async function bookGift(slug: string, giftId: string, inviteCode?: string, firstName?: string, lastName?: string) {
+  const response = await fetch(`${API_BASE}/gift-booking`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      slug,
+      giftId,
+      inviteCode,
+      firstName,
+      lastName,
+    }),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || `Failed to book gift: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+export async function releaseGift(slug: string, giftId: string, inviteCode?: string, firstName?: string, lastName?: string) {
+  const response = await fetch(`${API_BASE}/gift-booking`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      slug,
+      giftId,
+      inviteCode,
+      firstName,
+      lastName,
+    }),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || `Failed to release gift: ${response.statusText}`);
   }
   return response.json();
 }
