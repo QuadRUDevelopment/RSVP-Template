@@ -81,6 +81,16 @@ export const handler: Handler = async (event) => {
               id,
               name,
               meal_choice_id
+            ),
+            custom_rsvp_field_responses (
+              id,
+              field_id,
+              value,
+              custom_rsvp_fields (
+                id,
+                label,
+                field_type
+              )
             )
           )
         `)

@@ -95,7 +95,7 @@ export const handler: Handler = async (event) => {
       };
     }
 
-    // Get guests with RSVP data
+    // Get guests with RSVP data and custom field responses
     const { data: guests, error: guestsError } = await supabase
       .from('guests')
       .select(`
@@ -104,7 +104,15 @@ export const handler: Handler = async (event) => {
           status,
           plus_ones_count,
           notes,
-          submitted_at
+          submitted_at,
+          custom_rsvp_field_responses (
+            field_id,
+            value,
+            custom_rsvp_fields (
+              label,
+              field_type
+            )
+          )
         )
       `)
       .eq('event_id', eventData.id);
@@ -117,10 +125,20 @@ export const handler: Handler = async (event) => {
       };
     }
 
+    // Get custom fields for this event to create column headers
+    const { data: customFields } = await supabase
+      .from('custom_rsvp_fields')
+      .select('id, label')
+      .eq('event_id', eventData.id)
+      .order('sort_order', { ascending: true });
+
     // Format data for export
     const exportData = (guests || []).map((guest: any) => {
       const rsvp = guest.rsvps?.[0] || {};
-      return {
+      const customResponses = rsvp?.custom_rsvp_field_responses || [];
+      
+      // Build base export object
+      const exportRow: any = {
         invite_code: guest.invite_code,
         display_name: guest.display_name || `${guest.first_name} ${guest.last_name}`,
         first_name: guest.first_name,
@@ -136,6 +154,18 @@ export const handler: Handler = async (event) => {
         created_at: guest.created_at,
         updated_at: guest.updated_at,
       };
+
+      // Add custom field responses as columns
+      if (customFields && customFields.length > 0) {
+        customFields.forEach((field: any) => {
+          const response = customResponses.find((r: any) => r.field_id === field.id);
+          // Use field label as column name, sanitize for CSV
+          const columnName = `Custom: ${field.label}`;
+          exportRow[columnName] = response?.value || '';
+        });
+      }
+
+      return exportRow;
     });
 
     if (format === 'csv') {

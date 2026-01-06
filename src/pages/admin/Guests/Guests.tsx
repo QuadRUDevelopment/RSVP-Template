@@ -428,8 +428,22 @@ export const Guests: React.FC = () => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.xlsx,.xls,.csv';
+    input.style.display = 'none'; // Hide it
+    document.body.appendChild(input); // Add to DOM (required for some browsers)
+
+    // Handle cleanup if user cancels
+    const cleanup = () => {
+      if (document.body.contains(input)) {
+        document.body.removeChild(input);
+      }
+    };
+
     input.onchange = async (e: any) => {
       const file = e.target.files?.[0];
+      
+      // Clean up input element
+      cleanup();
+      
       if (!file) return;
 
       try {
@@ -508,12 +522,58 @@ export const Guests: React.FC = () => {
 
         if (!result.isConfirmed) return;
 
-        // Import guests (create or update)
+        // Import guests (create or update) with progress
+        const totalGuests = transformedData.length;
         let successCount = 0;
         let errorCount = 0;
         const errors: string[] = [];
 
-        for (const guestData of transformedData) {
+        // Show progress modal
+        Swal.fire({
+          ...getSwalConfig(),
+          title: 'Importing Guests...',
+          html: `
+            <div style="text-align: center;">
+              <div style="margin-bottom: 1rem;">
+                <div style="width: 100%; height: 20px; background: #e5e7eb; border-radius: 10px; overflow: hidden;">
+                  <div id="progress-bar" style="width: 0%; height: 100%; background: #2563eb; transition: width 0.3s; border-radius: 10px;"></div>
+                </div>
+              </div>
+              <p id="progress-text" style="color: #6b7280; font-size: 0.875rem; margin: 0;">
+                Processing 0 of ${totalGuests} guests...
+              </p>
+              <p id="progress-details" style="color: #9ca3af; font-size: 0.75rem; margin-top: 0.5rem;">
+                Success: 0 | Errors: 0
+              </p>
+            </div>
+          `,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+        });
+
+        // Update progress function
+        const updateProgress = (current: number, success: number, error: number) => {
+          const percentage = Math.round((current / totalGuests) * 100);
+          const progressBar = document.getElementById('progress-bar');
+          const progressText = document.getElementById('progress-text');
+          const progressDetails = document.getElementById('progress-details');
+          
+          if (progressBar) {
+            progressBar.style.width = `${percentage}%`;
+          }
+          if (progressText) {
+            progressText.textContent = `Processing ${current} of ${totalGuests} guests...`;
+          }
+          if (progressDetails) {
+            progressDetails.textContent = `Success: ${success} | Errors: ${error}`;
+          }
+        };
+
+        for (let i = 0; i < transformedData.length; i++) {
+          const guestData = transformedData[i];
+          const currentIndex = i + 1;
+          
           try {
             // Check if guest exists (by first_name + last_name)
             const existingGuests = guests.filter(
@@ -547,7 +607,16 @@ export const Guests: React.FC = () => {
             errorCount++;
             errors.push(`${guestData.first_name} ${guestData.last_name}: ${err.message}`);
           }
+          
+          // Update progress
+          updateProgress(currentIndex, successCount, errorCount);
+          
+          // Small delay to allow UI to update
+          await new Promise(resolve => setTimeout(resolve, 50));
         }
+
+        // Close progress modal
+        Swal.close();
 
         // Show results
         if (errorCount === 0) {
@@ -569,6 +638,12 @@ export const Guests: React.FC = () => {
       }
     };
 
+    // Handle case where user cancels file picker
+    input.oncancel = () => {
+      cleanup();
+    };
+
+    // Trigger file picker
     input.click();
   };
 
@@ -615,7 +690,78 @@ export const Guests: React.FC = () => {
         return `${count} (no names)`;
       },
     },
+    {
+      key: 'custom_fields',
+      label: 'Custom Fields',
+      sortable: false,
+      render: (_value: any, row: any) => {
+        const rsvp = row.rsvps?.[0];
+        const customResponses = rsvp?.custom_rsvp_field_responses || [];
+        
+        if (customResponses.length === 0) {
+          return <span style={{ color: '#9ca3af' }}>-</span>;
+        }
+        
+        // Show count and allow clicking to view details
+        return (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              showCustomFieldsModal(row);
+            }}
+            style={{
+              background: 'none',
+              border: '1px solid #2563eb',
+              color: '#2563eb',
+              padding: '0.25rem 0.75rem',
+              borderRadius: '0.375rem',
+              cursor: 'pointer',
+              fontSize: '0.875rem',
+            }}
+          >
+            View ({customResponses.length})
+          </button>
+        );
+      },
+    },
   ];
+
+  const showCustomFieldsModal = async (guest: any) => {
+    const rsvp = guest.rsvps?.[0];
+    const customResponses = rsvp?.custom_rsvp_field_responses || [];
+    
+    if (customResponses.length === 0) {
+      await createErrorModal('No Custom Fields', 'This guest has not submitted any custom field responses.');
+      return;
+    }
+
+    const fieldsHtml = customResponses
+      .map((response: any) => {
+        const field = response.custom_rsvp_fields;
+        if (!field) return '';
+        return `
+          <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb;">
+            <strong style="display: block; margin-bottom: 0.5rem; color: #374151;">${field.label}</strong>
+            <span style="color: #6b7280;">${response.value || '(empty)'}</span>
+          </div>
+        `;
+      })
+      .join('');
+
+    await Swal.fire({
+      ...getSwalConfig(),
+      title: `Custom Fields - ${guest.display_name || `${guest.first_name} ${guest.last_name}`}`,
+      html: `
+        <div style="text-align: left; max-height: 400px; overflow-y: auto;">
+          ${fieldsHtml}
+        </div>
+      `,
+      showConfirmButton: true,
+      confirmButtonText: 'Close',
+      showCancelButton: false,
+      width: '600px',
+    });
+  };
 
   return (
     <div className="guests-page">
