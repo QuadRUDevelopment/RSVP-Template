@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
 import { getSwalConfig, createSuccessModal, createErrorModal, createDeleteModal } from '../../../lib/sweetalert2Config';
 import { Card } from '../../../components/ui/Card/Card';
 import { Button } from '../../../components/ui/Button/Button';
@@ -143,29 +144,288 @@ export const GiftRegistry: React.FC = () => {
     }
   };
 
-  // TODO: Implement release booking functionality
-  // This function will be used when we add the ability to release bookings from the admin panel
-  // const handleReleaseBooking = async (_giftId: string) => {
-  //   if (!token) return;
-  //   const result = await Swal.fire({
-  //     ...getSwalConfig(),
-  //     title: 'Release Booking?',
-  //     text: 'This will make the gift available for booking again.',
-  //     icon: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Yes, release it',
-  //     cancelButtonText: 'Cancel',
-  //   });
-  //
-  //   if (result.isConfirmed) {
-  //     try {
-  //       // TODO: Add release booking API endpoint
-  //       await createErrorModal('Not Implemented', 'Release booking feature will be available soon.');
-  //     } catch (err: any) {
-  //       await createErrorModal('Error', `Failed to release booking: ${err.message}`);
-  //     }
-  //   }
-  // };
+  const handleDownloadTemplate = () => {
+    // Create template with required columns
+    const templateData = [
+      {
+        'Name': 'Example Gift Item',
+        'Description': 'A beautiful example gift for your registry',
+        'URL': 'https://example.com/registry/item',
+        'Sort Order': '0'
+      }
+    ];
+
+    const ws = XLSX.utils.json_to_sheet(templateData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Gifts');
+    
+    // Add instructions sheet
+    const instructions = [
+      ['GIFT REGISTRY IMPORT TEMPLATE'],
+      [''],
+      ['Required Columns:'],
+      ['- Name (required) - The name of the gift item'],
+      [''],
+      ['Optional Columns:'],
+      ['- Description (optional) - Description of the gift'],
+      ['- URL (optional) - Link to the gift registry item'],
+      ['- Sort Order (optional, default: 0) - Number to control display order'],
+      [''],
+      ['Key Column for Matching:'],
+      ['- Name is used to match existing gifts'],
+      ['- If match found, gift will be updated'],
+      ['- If no match, new gift will be created'],
+      [''],
+      ['Notes:'],
+      ['- Remove this instruction row before importing'],
+      ['- Keep only the header row and data rows'],
+      ['- Sort Order must be a number']
+    ];
+    const wsInstructions = XLSX.utils.aoa_to_sheet(instructions);
+    XLSX.utils.book_append_sheet(wb, wsInstructions, 'Instructions');
+    
+    XLSX.writeFile(wb, 'gifts-import-template.xlsx');
+    createSuccessModal('Template Downloaded!', 'Fill in the template and import it back.');
+  };
+
+  const validateImportData = (data: any[]): { valid: boolean; errors: string[] } => {
+    const errors: string[] = [];
+
+    if (data.length === 0) {
+      errors.push('File is empty or has no data rows');
+      return { valid: false, errors };
+    }
+
+    // Check first row for required columns
+    const firstRow = data[0];
+    const columns = Object.keys(firstRow);
+    
+    if (!columns.includes('Name')) {
+      errors.push('Missing required column: Name');
+    }
+
+    // Validate each row
+    data.forEach((row, index) => {
+      const rowNum = index + 2; // +2 because Excel is 1-indexed and we skip header
+      
+      if (!row['Name'] || !String(row['Name']).trim()) {
+        errors.push(`Row ${rowNum}: Name is required`);
+      }
+
+      if (row['Sort Order']) {
+        const sortOrder = parseInt(String(row['Sort Order']));
+        if (isNaN(sortOrder)) {
+          errors.push(`Row ${rowNum}: Sort Order must be a number`);
+        }
+      }
+
+      if (row['URL'] && String(row['URL']).trim()) {
+        const url = String(row['URL']).trim();
+        try {
+          new URL(url);
+        } catch {
+          errors.push(`Row ${rowNum}: Invalid URL format`);
+        }
+      }
+    });
+
+    return {
+      valid: errors.length === 0,
+      errors
+    };
+  };
+
+  const handleImport = async () => {
+    if (!token) return;
+
+    // Create file input
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.xlsx,.xls,.csv';
+    input.onchange = async (e: any) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      try {
+        // Read file
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        if (jsonData.length === 0) {
+          await createErrorModal('Error', 'File is empty or has no data rows');
+          return;
+        }
+
+        // Validate data
+        const validation = validateImportData(jsonData);
+        if (!validation.valid) {
+          await createErrorModal(
+            'Validation Errors',
+            `Please fix the following errors:\n\n${validation.errors.slice(0, 10).join('\n')}${validation.errors.length > 10 ? `\n... and ${validation.errors.length - 10} more errors` : ''}`
+          );
+          return;
+        }
+        
+        // Transform data
+        const transformedData = jsonData.map((row: any) => ({
+          name: String(row['Name'] || '').trim(),
+          description: String(row['Description'] || '').trim() || undefined,
+          url: String(row['URL'] || '').trim() || undefined,
+          sort_order: parseInt(String(row['Sort Order'] || '0')) || 0,
+        }));
+
+        // Show confirmation
+        const result = await Swal.fire({
+          ...getSwalConfig(),
+          title: 'Confirm Import',
+          html: `
+            <p>You are about to import <strong>${transformedData.length}</strong> gift(s).</p>
+            <p style="font-size: 0.875rem; color: #6b7280; margin-top: 1rem;">
+              Gifts will be matched by Name.<br>
+              If a match is found, the gift will be updated.<br>
+              If no match is found, a new gift will be created.
+            </p>
+          `,
+          showCancelButton: true,
+          confirmButtonText: 'Import',
+          cancelButtonText: 'Cancel',
+        });
+
+        if (!result.isConfirmed) return;
+
+        // Import gifts (create or update)
+        const slug = getCurrentEventSlug();
+        let successCount = 0;
+        let errorCount = 0;
+        const errors: string[] = [];
+
+        for (const giftData of transformedData) {
+          try {
+            // Check if gift exists (by name)
+            const existingGift = gifts.find(
+              g => g.name?.toLowerCase() === giftData.name.toLowerCase()
+            );
+
+            if (existingGift) {
+              // Update existing gift
+              await adminRequest(
+                'admin-gift-registry',
+                {
+                  method: 'POST',
+                  body: JSON.stringify({ id: existingGift.id, slug, ...giftData }),
+                },
+                token
+              );
+            } else {
+              // Create new gift
+              await adminRequest(
+                'admin-gift-registry',
+                {
+                  method: 'POST',
+                  body: JSON.stringify({ slug, ...giftData }),
+                },
+                token
+              );
+            }
+            successCount++;
+          } catch (err: any) {
+            errorCount++;
+            errors.push(`${giftData.name}: ${err.message}`);
+          }
+        }
+
+        // Show results
+        if (errorCount === 0) {
+          await createSuccessModal(
+            'Import Successful!',
+            `Successfully imported ${successCount} gift(s).`
+          );
+        } else {
+          await createErrorModal(
+            'Import Completed with Errors',
+            `Imported: ${successCount}\nErrors: ${errorCount}\n\n${errors.slice(0, 5).join('\n')}${errors.length > 5 ? `\n... and ${errors.length - 5} more` : ''}`
+          );
+        }
+
+        // Reload gifts
+        loadGifts();
+      } catch (err: any) {
+        await createErrorModal('Error', `Failed to import: ${err.message}`);
+      }
+    };
+
+    input.click();
+  };
+
+  const handleExport = async (format: 'xlsx' | 'csv' | 'json') => {
+    if (!token) return;
+    try {
+      const slug = getCurrentEventSlug();
+      
+      if (format === 'xlsx') {
+        // Export to Excel using XLSX library
+        const exportData = gifts.map((gift: any) => ({
+          'Name': gift.name || '',
+          'Description': gift.description || '',
+          'URL': gift.url || '',
+          'Sort Order': gift.sort_order || 0,
+          'Status': gift.booked ? 'Booked' : 'Available',
+          'Booked By': gift.booked_by?.guest_name || '',
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Gifts');
+        XLSX.writeFile(wb, `gifts-${slug}-${Date.now()}.xlsx`);
+        await createSuccessModal('Export Successful!', 'Gifts exported to Excel file.');
+      } else if (format === 'csv') {
+        // Export to CSV
+        const exportData = gifts.map((gift: any) => ({
+          name: gift.name || '',
+          description: gift.description || '',
+          url: gift.url || '',
+          sort_order: gift.sort_order || 0,
+          status: gift.booked ? 'Booked' : 'Available',
+          booked_by: gift.booked_by?.guest_name || '',
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const csv = XLSX.utils.sheet_to_csv(ws);
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `gifts-${slug}-${Date.now()}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        await createSuccessModal('Export Successful!', 'Gifts exported to CSV file.');
+      } else {
+        // Export to JSON
+        const exportData = gifts.map((gift: any) => ({
+          name: gift.name,
+          description: gift.description,
+          url: gift.url,
+          sort_order: gift.sort_order,
+          booked: gift.booked,
+          booked_by: gift.booked_by,
+        }));
+
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `gifts-${slug}-${Date.now()}.json`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        await createSuccessModal('Export Successful!', 'Gifts exported to JSON file.');
+      }
+    } catch (err: any) {
+      await createErrorModal('Error', `Export failed: ${err.message}`);
+    }
+  };
 
   const columns = [
     { key: 'name', label: 'Name', sortable: true, filterable: true },
@@ -200,9 +460,26 @@ export const GiftRegistry: React.FC = () => {
     <div className="accommodation-admin-page">
       <div className="page-header">
         <h1>Gift Registry Management</h1>
-        <Button variant="primary" onClick={handleAdd}>
-          Add Gift
-        </Button>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <Button variant="outline" onClick={handleDownloadTemplate}>
+            📥 Download Template
+          </Button>
+          <Button variant="outline" onClick={handleImport}>
+            📤 Import Excel
+          </Button>
+          <Button variant="outline" onClick={() => handleExport('xlsx')}>
+            Export Excel
+          </Button>
+          <Button variant="outline" onClick={() => handleExport('csv')}>
+            Export CSV
+          </Button>
+          <Button variant="outline" onClick={() => handleExport('json')}>
+            Export JSON
+          </Button>
+          <Button variant="primary" onClick={handleAdd}>
+            Add Gift
+          </Button>
+        </div>
       </div>
 
       <Card>
