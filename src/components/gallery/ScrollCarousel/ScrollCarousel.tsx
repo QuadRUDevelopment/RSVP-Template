@@ -13,6 +13,9 @@ export const ScrollCarousel: React.FC<ScrollCarouselProps> = ({ images, onComple
   const containerRef = useRef<HTMLDivElement>(null);
   const isTransitioning = useRef(false);
   const wheelTimeoutRef = useRef<number | null>(null);
+  const autoRotateIntervalRef = useRef<number | null>(null);
+  const lastUserInteractionRef = useRef<number>(Date.now());
+  const userScrollingRef = useRef(false);
 
   useEffect(() => {
     if (images.length === 0) {
@@ -34,6 +37,61 @@ export const ScrollCarousel: React.FC<ScrollCarouselProps> = ({ images, onComple
       observer.observe(containerRef.current);
     }
 
+    // Auto-rotate images every 1 second if user is not scrolling
+    const startAutoRotate = () => {
+      // Clear any existing interval
+      if (autoRotateIntervalRef.current) {
+        clearInterval(autoRotateIntervalRef.current);
+        autoRotateIntervalRef.current = null;
+      }
+
+      // Only start if carousel is active and has images
+      if (!isActive || images.length <= 1) {
+        return;
+      }
+
+      autoRotateIntervalRef.current = window.setInterval(() => {
+        // Only auto-rotate if:
+        // 1. Carousel is active (in view)
+        // 2. User hasn't scrolled recently (within last 2 seconds)
+        // 3. Not currently transitioning
+        const timeSinceLastInteraction = Date.now() - lastUserInteractionRef.current;
+        const shouldAutoRotate = 
+          isActive && 
+          !userScrollingRef.current && 
+          !isTransitioning.current &&
+          timeSinceLastInteraction > 2000; // 2 seconds after last user interaction
+
+        if (shouldAutoRotate && images.length > 1) {
+          isTransitioning.current = true;
+          setCurrentIndex((prev) => {
+            // If on last image, loop back to first
+            if (prev >= images.length - 1) {
+              setTimeout(() => {
+                isTransitioning.current = false;
+              }, 600);
+              return 0;
+            }
+            setTimeout(() => {
+              isTransitioning.current = false;
+            }, 600);
+            return prev + 1;
+          });
+        }
+      }, 1000); // Rotate every 1 second
+    };
+
+    // Start auto-rotation when active state changes
+    if (isActive) {
+      startAutoRotate();
+    } else {
+      // Stop auto-rotation when not active
+      if (autoRotateIntervalRef.current) {
+        clearInterval(autoRotateIntervalRef.current);
+        autoRotateIntervalRef.current = null;
+      }
+    }
+
     // Handle wheel events for smooth image transitions
     const handleWheel = (e: WheelEvent) => {
       if (!isActive || isTransitioning.current) return;
@@ -51,10 +109,18 @@ export const ScrollCarousel: React.FC<ScrollCarouselProps> = ({ images, onComple
         return;
       }
 
-      // Clear existing timeout
+      // Mark user interaction and pause auto-rotation
+      lastUserInteractionRef.current = Date.now();
+      userScrollingRef.current = true;
+
+      // Resume auto-rotation after 2 seconds of no scrolling
       if (wheelTimeoutRef.current) {
         window.clearTimeout(wheelTimeoutRef.current);
       }
+      
+      wheelTimeoutRef.current = window.setTimeout(() => {
+        userScrollingRef.current = false;
+      }, 2000); // Resume auto-rotation 2 seconds after user stops scrolling
 
       // Handle scroll down - next image
       if (e.deltaY > 0) {
@@ -107,6 +173,9 @@ export const ScrollCarousel: React.FC<ScrollCarouselProps> = ({ images, onComple
       window.removeEventListener('wheel', handleWheel);
       if (wheelTimeoutRef.current) {
         window.clearTimeout(wheelTimeoutRef.current);
+      }
+      if (autoRotateIntervalRef.current) {
+        clearInterval(autoRotateIntervalRef.current);
       }
     };
   }, [currentIndex, images.length, isActive, onComplete]);

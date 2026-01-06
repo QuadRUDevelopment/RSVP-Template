@@ -131,6 +131,18 @@ export const GiftRegistry: React.FC = () => {
               {gifts.map((gift) => (
                 <div key={gift.id} className={`gift-card ${gift.booked ? 'booked' : ''}`}>
                   <div className="gift-card-content">
+                    {/* Top Book Button */}
+                    <div className="gift-card-top-actions">
+                      <Button
+                        variant="primary"
+                        onClick={() => setShowBooking(true)}
+                        disabled={gift.booked}
+                        style={{ width: '100%', marginBottom: '1rem' }}
+                      >
+                        {gift.booked ? 'Already Booked' : 'Book This Gift'}
+                      </Button>
+                    </div>
+
                     <h3>{gift.name}</h3>
                     {gift.description && <p>{gift.description}</p>}
                     {gift.url && (
@@ -143,6 +155,18 @@ export const GiftRegistry: React.FC = () => {
                         View Registry →
                       </a>
                     )}
+
+                    {/* Bottom Book Button */}
+                    <div className="gift-card-bottom-actions">
+                      <Button
+                        variant="primary"
+                        onClick={() => setShowBooking(true)}
+                        disabled={gift.booked}
+                        style={{ width: '100%', marginTop: '1rem' }}
+                      >
+                        {gift.booked ? 'Already Booked' : 'Book This Gift'}
+                      </Button>
+                    </div>
                   </div>
                   {gift.booked && (
                     <span className="booked-badge">Booked</span>
