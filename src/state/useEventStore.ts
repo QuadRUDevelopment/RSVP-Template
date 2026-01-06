@@ -21,6 +21,7 @@ export interface Event {
   banner_text_background_color?: string; // background color (hex)
   banner_text_background_opacity?: number; // background opacity 0.0-1.0
   banner_text_padding?: number; // padding in pixels
+  gallery_carousel_speed?: number; // carousel rotation speed in milliseconds
   date_text?: string;
   venue_text?: string;
   dress_code?: string;

@@ -5,9 +5,10 @@ import './ScrollCarousel.css';
 interface ScrollCarouselProps {
   images: Array<{ id: string; url: string; caption?: string }>;
   onComplete?: () => void;
+  rotationSpeed?: number; // rotation speed in milliseconds (default: 3000ms = 3 seconds)
 }
 
-export const ScrollCarousel: React.FC<ScrollCarouselProps> = ({ images, onComplete }) => {
+export const ScrollCarousel: React.FC<ScrollCarouselProps> = ({ images, onComplete, rotationSpeed = 3000 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -78,7 +79,7 @@ export const ScrollCarousel: React.FC<ScrollCarouselProps> = ({ images, onComple
             return prev + 1;
           });
         }
-      }, 1000); // Rotate every 1 second
+      }, rotationSpeed); // Rotate at configured speed (default: 3000ms = 3 seconds)
     };
 
     // Start auto-rotation when active state changes
@@ -178,7 +179,7 @@ export const ScrollCarousel: React.FC<ScrollCarouselProps> = ({ images, onComple
         clearInterval(autoRotateIntervalRef.current);
       }
     };
-  }, [currentIndex, images.length, isActive, onComplete]);
+  }, [currentIndex, images.length, isActive, onComplete, rotationSpeed]);
 
   if (images.length === 0) {
     return null;

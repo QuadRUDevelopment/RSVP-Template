@@ -343,6 +343,7 @@ export const Home: React.FC = () => {
               <div className="story-gallery-left">
               <ScrollCarousel
                 images={galleryImages}
+                rotationSpeed={event?.gallery_carousel_speed || 3000}
               />
               </div>
             )}

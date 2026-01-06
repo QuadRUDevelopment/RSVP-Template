@@ -434,6 +434,26 @@ export const Settings: React.FC = () => {
         </Card>
 
         <Card className="settings-section">
+          <h2>Gallery Carousel Settings</h2>
+          <div className="form-group">
+            <label>Auto-Rotation Speed (milliseconds)</label>
+            <input
+              type="number"
+              value={formData.gallery_carousel_speed ?? 3000}
+              onChange={(e) => handleChange('gallery_carousel_speed', parseInt(e.target.value) || 3000)}
+              min="1000"
+              max="10000"
+              step="500"
+              placeholder="3000"
+            />
+            <small>
+              Time between image rotations. Default: 3000ms (3 seconds). 
+              Recommended: 2000-5000ms. Lower = faster rotation.
+            </small>
+          </div>
+        </Card>
+
+        <Card className="settings-section">
           <h2>Story Content</h2>
           <div className="form-group">
             <label>Invitation Text</label>
