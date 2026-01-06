@@ -1,6 +1,41 @@
 .admin-layout {
   display: flex;
   min-height: 100vh;
+  position: relative;
+}
+
+/* Mobile menu toggle button */
+.mobile-menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1001;
+  background: #1f2937;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s;
+}
+
+.mobile-menu-toggle:hover {
+  background: #374151;
+}
+
+/* Sidebar overlay for mobile */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  backdrop-filter: blur(2px);
 }
 
 .admin-sidebar {
@@ -13,6 +48,9 @@
   height: 100vh;
   left: 0;
   top: 0;
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-header {
@@ -30,6 +68,7 @@
   flex: 1;
   padding: 1rem 0;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .nav-item {
@@ -38,6 +77,7 @@
   color: #d1d5db;
   text-decoration: none;
   transition: background-color 0.2s;
+  font-size: 0.9375rem;
 }
 
 .nav-item:hover {
@@ -48,6 +88,7 @@
 .nav-item.active {
   background-color: #2563eb;
   color: white;
+  font-weight: 500;
 }
 
 .sidebar-footer {
@@ -64,6 +105,7 @@
   border-radius: 0.5rem;
   cursor: pointer;
   font-weight: 500;
+  transition: background-color 0.2s;
 }
 
 .logout-btn:hover {
@@ -75,5 +117,73 @@
   margin-left: 240px;
   padding: 2rem;
   background: #f9fafb;
+  min-height: 100vh;
+  width: calc(100% - 240px);
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  .sidebar-overlay {
+    display: block;
+  }
+
+  .admin-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .admin-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .admin-main {
+    margin-left: 0;
+    width: 100%;
+    padding: 1rem;
+    padding-top: 4.5rem; /* Space for mobile menu button */
+  }
+
+  .sidebar-header {
+    padding: 1rem;
+  }
+
+  .sidebar-header h2 {
+    font-size: 1.125rem;
+  }
+
+  .nav-item {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.9375rem;
+  }
+
+  .sidebar-footer {
+    padding: 0.75rem;
+  }
+
+  .logout-btn {
+    padding: 0.625rem;
+    font-size: 0.9375rem;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .admin-sidebar {
+    width: 200px;
+  }
+
+  .admin-main {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+    padding: 1.5rem;
+  }
+
+  .nav-item {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+  }
 }
 
