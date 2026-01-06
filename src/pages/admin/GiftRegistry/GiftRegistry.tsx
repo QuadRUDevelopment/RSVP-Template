@@ -242,8 +242,22 @@ export const GiftRegistry: React.FC = () => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.xlsx,.xls,.csv';
+    input.style.display = 'none'; // Hide it
+    document.body.appendChild(input); // Add to DOM (required for some browsers)
+
+    // Handle cleanup if user cancels
+    const cleanup = () => {
+      if (document.body.contains(input)) {
+        document.body.removeChild(input);
+      }
+    };
+
     input.onchange = async (e: any) => {
       const file = e.target.files?.[0];
+      
+      // Clean up input element
+      cleanup();
+      
       if (!file) return;
 
       try {
@@ -357,6 +371,12 @@ export const GiftRegistry: React.FC = () => {
       }
     };
 
+    // Handle case where user cancels file picker
+    input.oncancel = () => {
+      cleanup();
+    };
+
+    // Trigger file picker
     input.click();
   };
 
