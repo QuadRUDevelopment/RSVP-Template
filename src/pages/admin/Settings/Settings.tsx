@@ -303,6 +303,134 @@ export const Settings: React.FC = () => {
               </div>
             </>
           )}
+
+          <div className="form-group" style={{ marginTop: '2rem', paddingTop: '2rem', borderTop: '1px solid #e5e7eb' }}>
+            <label>
+              <input
+                type="checkbox"
+                checked={formData.banner_text_border_enabled === true}
+                onChange={(e) => handleChange('banner_text_border_enabled', e.target.checked)}
+              />
+              {' '}Enable Border
+            </label>
+          </div>
+          {formData.banner_text_border_enabled === true && (
+            <>
+              <div className="form-group">
+                <label>Border Width (pixels)</label>
+                <input
+                  type="number"
+                  value={formData.banner_text_border_width ?? 2}
+                  onChange={(e) => handleChange('banner_text_border_width', parseInt(e.target.value) || 0)}
+                  min="1"
+                  max="10"
+                  placeholder="2"
+                />
+              </div>
+              <div className="form-group">
+                <label>Border Color</label>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <input
+                    type="color"
+                    value={formData.banner_text_border_color || '#ffffff'}
+                    onChange={(e) => handleChange('banner_text_border_color', e.target.value)}
+                    style={{ width: '60px', height: '40px', cursor: 'pointer' }}
+                  />
+                  <input
+                    type="text"
+                    value={formData.banner_text_border_color || '#ffffff'}
+                    onChange={(e) => handleChange('banner_text_border_color', e.target.value)}
+                    placeholder="#ffffff"
+                    style={{ flex: 1 }}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Border Opacity (0.0 - 1.0)</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  max="1"
+                  value={formData.banner_text_border_opacity ?? 1.0}
+                  onChange={(e) => handleChange('banner_text_border_opacity', parseFloat(e.target.value) || 1.0)}
+                  placeholder="1.0"
+                />
+                <small>0.0 = fully transparent, 1.0 = fully opaque</small>
+              </div>
+              <div className="form-group">
+                <label>Border Radius (pixels)</label>
+                <input
+                  type="number"
+                  value={formData.banner_text_border_radius ?? 8}
+                  onChange={(e) => handleChange('banner_text_border_radius', parseInt(e.target.value) || 8)}
+                  min="0"
+                  max="50"
+                  placeholder="8"
+                />
+                <small>Default: 8px</small>
+              </div>
+            </>
+          )}
+
+          <div className="form-group" style={{ marginTop: '2rem', paddingTop: '2rem', borderTop: '1px solid #e5e7eb' }}>
+            <label>
+              <input
+                type="checkbox"
+                checked={formData.banner_text_background_enabled === true}
+                onChange={(e) => handleChange('banner_text_background_enabled', e.target.checked)}
+              />
+              {' '}Enable Background
+            </label>
+          </div>
+          {formData.banner_text_background_enabled === true && (
+            <>
+              <div className="form-group">
+                <label>Background Color</label>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <input
+                    type="color"
+                    value={formData.banner_text_background_color || '#000000'}
+                    onChange={(e) => handleChange('banner_text_background_color', e.target.value)}
+                    style={{ width: '60px', height: '40px', cursor: 'pointer' }}
+                  />
+                  <input
+                    type="text"
+                    value={formData.banner_text_background_color || '#000000'}
+                    onChange={(e) => handleChange('banner_text_background_color', e.target.value)}
+                    placeholder="#000000"
+                    style={{ flex: 1 }}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Background Opacity (0.0 - 1.0)</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  max="1"
+                  value={formData.banner_text_background_opacity ?? 0.5}
+                  onChange={(e) => handleChange('banner_text_background_opacity', parseFloat(e.target.value) || 0.5)}
+                  placeholder="0.5"
+                />
+                <small>0.0 = fully transparent, 1.0 = fully opaque</small>
+              </div>
+            </>
+          )}
+
+          <div className="form-group" style={{ marginTop: '2rem', paddingTop: '2rem', borderTop: '1px solid #e5e7eb' }}>
+            <label>Padding (pixels)</label>
+            <input
+              type="number"
+              value={formData.banner_text_padding ?? 16}
+              onChange={(e) => handleChange('banner_text_padding', parseInt(e.target.value) || 16)}
+              min="0"
+              max="50"
+              placeholder="16"
+            />
+            <small>Padding between border and text. Default: 16px</small>
+          </div>
         </Card>
 
         <Card className="settings-section">

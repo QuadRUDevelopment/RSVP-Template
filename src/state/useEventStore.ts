@@ -12,6 +12,15 @@ export interface Event {
   banner_text_shadow_y?: number; // vertical offset in pixels
   banner_text_shadow_blur?: number; // blur radius in pixels
   banner_text_shadow_color?: string; // shadow color
+  banner_text_border_enabled?: boolean;
+  banner_text_border_width?: number; // border width in pixels
+  banner_text_border_color?: string; // border color (hex)
+  banner_text_border_opacity?: number; // border opacity 0.0-1.0
+  banner_text_border_radius?: number; // border radius in pixels
+  banner_text_background_enabled?: boolean;
+  banner_text_background_color?: string; // background color (hex)
+  banner_text_background_opacity?: number; // background opacity 0.0-1.0
+  banner_text_padding?: number; // padding in pixels
   date_text?: string;
   venue_text?: string;
   dress_code?: string;

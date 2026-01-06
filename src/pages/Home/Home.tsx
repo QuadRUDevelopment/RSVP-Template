@@ -277,6 +277,42 @@ export const Home: React.FC = () => {
                 textShadow: event.banner_text_shadow_enabled !== false
                   ? `${event.banner_text_shadow_x || 2}px ${event.banner_text_shadow_y || 2}px ${event.banner_text_shadow_blur || 4}px ${event.banner_text_shadow_color || 'rgba(0, 0, 0, 0.5)'}`
                   : 'none',
+                // Border styles
+                border: event.banner_text_border_enabled === true
+                  ? `${event.banner_text_border_width || 2}px solid ${(() => {
+                      const borderColor = event.banner_text_border_color || '#ffffff';
+                      const opacity = event.banner_text_border_opacity ?? 1.0;
+                      // Convert hex to rgba if needed
+                      if (borderColor.startsWith('#')) {
+                        const r = parseInt(borderColor.slice(1, 3), 16);
+                        const g = parseInt(borderColor.slice(3, 5), 16);
+                        const b = parseInt(borderColor.slice(5, 7), 16);
+                        return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+                      }
+                      return borderColor;
+                    })()}`
+                  : 'none',
+                borderRadius: event.banner_text_border_enabled === true
+                  ? `${event.banner_text_border_radius || 8}px`
+                  : '0',
+                // Background styles
+                backgroundColor: event.banner_text_background_enabled === true
+                  ? (() => {
+                      const bgColor = event.banner_text_background_color || '#000000';
+                      const opacity = event.banner_text_background_opacity ?? 0.5;
+                      // Convert hex to rgba if needed
+                      if (bgColor.startsWith('#')) {
+                        const r = parseInt(bgColor.slice(1, 3), 16);
+                        const g = parseInt(bgColor.slice(3, 5), 16);
+                        const b = parseInt(bgColor.slice(5, 7), 16);
+                        return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+                      }
+                      return bgColor;
+                    })()
+                  : 'transparent',
+                // Padding
+                padding: `${event.banner_text_padding || 16}px`,
+                display: 'inline-block',
               } as React.CSSProperties}
             >
               {event.banner_text || event.title}
