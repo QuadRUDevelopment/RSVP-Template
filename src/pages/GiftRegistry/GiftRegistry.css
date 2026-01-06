@@ -62,9 +62,12 @@
   flex-direction: column;
 }
 
-.gift-card-top-actions,
-.gift-card-bottom-actions {
-  width: 100%;
+.gift-registry-bottom-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(var(--theme-container-rgb, 37, 99, 235), 0.2);
 }
 
 .gift-card h3 {
@@ -124,9 +127,9 @@
     width: 100%;
   }
 
-  .gift-card-top-actions,
-  .gift-card-bottom-actions {
-    width: 100%;
+  .gift-registry-bottom-actions {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
   }
 
   .booked-badge {
