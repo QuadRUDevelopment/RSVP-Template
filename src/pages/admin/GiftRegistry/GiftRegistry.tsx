@@ -143,28 +143,29 @@ export const GiftRegistry: React.FC = () => {
     }
   };
 
-  const handleReleaseBooking = async (_giftId: string) => {
-    if (!token) return;
-    const result = await Swal.fire({
-      ...getSwalConfig(),
-      title: 'Release Booking?',
-      text: 'This will make the gift available for booking again.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, release it',
-      cancelButtonText: 'Cancel',
-    });
-
-    if (result.isConfirmed) {
-      try {
-        // TODO: Add release booking API endpoint
-        // For now, we'll need to manually delete the booking
-        await createErrorModal('Not Implemented', 'Release booking feature will be available soon.');
-      } catch (err: any) {
-        await createErrorModal('Error', `Failed to release booking: ${err.message}`);
-      }
-    }
-  };
+  // TODO: Implement release booking functionality
+  // This function will be used when we add the ability to release bookings from the admin panel
+  // const handleReleaseBooking = async (_giftId: string) => {
+  //   if (!token) return;
+  //   const result = await Swal.fire({
+  //     ...getSwalConfig(),
+  //     title: 'Release Booking?',
+  //     text: 'This will make the gift available for booking again.',
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Yes, release it',
+  //     cancelButtonText: 'Cancel',
+  //   });
+  //
+  //   if (result.isConfirmed) {
+  //     try {
+  //       // TODO: Add release booking API endpoint
+  //       await createErrorModal('Not Implemented', 'Release booking feature will be available soon.');
+  //     } catch (err: any) {
+  //       await createErrorModal('Error', `Failed to release booking: ${err.message}`);
+  //     }
+  //   }
+  // };
 
   const columns = [
     { key: 'name', label: 'Name', sortable: true, filterable: true },

@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { GuestLookup } from '../../rsvp/GuestLookup/GuestLookup';
 import { Button } from '../../ui/Button/Button';
 import { Card } from '../../ui/Card/Card';
 import { getCurrentEventSlug } from '../../../lib/eventResolver';
 import { getGuestGiftBookings, bookGift, releaseGift } from '../../../lib/apiClient';
-import { useEventStore } from '../../../state/useEventStore';
 import Swal from 'sweetalert2';
 import { getSwalConfig, createSuccessModal, createErrorModal } from '../../../lib/sweetalert2Config';
 import './GiftBooking.css';
@@ -21,7 +20,6 @@ interface GiftBookingProps {
 }
 
 export const GiftBooking: React.FC<GiftBookingProps> = ({ gifts, onBookingChanged }) => {
-  const { event } = useEventStore();
   const [step, setStep] = useState<'lookup' | 'select'>('lookup');
   const [guestData, setGuestData] = useState<any>(null);
   const [bookings, setBookings] = useState<any[]>([]);
