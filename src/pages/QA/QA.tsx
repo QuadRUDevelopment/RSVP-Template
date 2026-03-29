@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { TopNav } from '../../components/layout/TopNav/TopNav';
 import { getCurrentEventSlug } from '../../lib/eventResolver';
 import { fetchPublicQA, fetchPublicEvent } from '../../lib/apiClient';
-import { useEventStore, getThemeColors } from '../../state/useEventStore';
+import { useEventStore } from '../../state/useEventStore';
+import { applyTheme } from '../../lib/applyTheme';
 import './QA.css';
 
 export const QA: React.FC = () => {
   const { event, setEvent } = useEventStore();
-  const theme = getThemeColors(event);
   const [qaItems, setQaItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [openIds, setOpenIds] = useState<Set<string>>(new Set());
@@ -31,27 +31,7 @@ export const QA: React.FC = () => {
     init();
   }, []);
 
-  const hexToRgb = (hex: string): string => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result
-      ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
-      : '37, 99, 235';
-  };
-
-  useEffect(() => {
-    if (event) {
-      const root = document.documentElement;
-      root.style.setProperty('--theme-primary', theme.primary);
-      root.style.setProperty('--theme-secondary', theme.secondary);
-      root.style.setProperty('--theme-text', theme.text);
-      root.style.setProperty('--theme-background', theme.background);
-      root.style.setProperty('--theme-accent', theme.accent);
-      root.style.setProperty('--theme-accent-rgb', hexToRgb(theme.accent));
-      root.style.setProperty('--theme-container', theme.container);
-      root.style.setProperty('--theme-container-rgb', hexToRgb(theme.container));
-      document.body.style.backgroundColor = theme.background;
-    }
-  }, [event, theme]);
+  useEffect(() => { applyTheme(event); }, [event]);
 
   const toggleItem = (id: string) => {
     setOpenIds((prev) => {

@@ -1,40 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { TopNav } from '../../components/layout/TopNav/TopNav';
 import { Card } from '../../components/ui/Card/Card';
-import { useEventStore, getThemeColors } from '../../state/useEventStore';
+import { useEventStore } from '../../state/useEventStore';
+import { applyTheme } from '../../lib/applyTheme';
 import { getCurrentEventSlug } from '../../lib/eventResolver';
 import { fetchPublicEvent } from '../../lib/apiClient';
 import './Venue.css';
 
 export const Venue: React.FC = () => {
   const { event, setEvent, setLoading } = useEventStore();
-  const theme = getThemeColors(event);
   const slug = getCurrentEventSlug();
   const [localLoading, setLocalLoading] = useState(true);
 
-  // Helper to convert hex to RGB
-  const hexToRgb = (hex: string): string => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result
-      ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
-      : '37, 99, 235'; // Default blue
-  };
-
-  // Apply theme colors
-  useEffect(() => {
-    if (event) {
-      const root = document.documentElement;
-      root.style.setProperty('--theme-primary', theme.primary);
-      root.style.setProperty('--theme-secondary', theme.secondary);
-      root.style.setProperty('--theme-text', theme.text);
-      root.style.setProperty('--theme-background', theme.background);
-      root.style.setProperty('--theme-accent', theme.accent);
-      root.style.setProperty('--theme-accent-rgb', hexToRgb(theme.accent));
-      root.style.setProperty('--theme-container', theme.container);
-      root.style.setProperty('--theme-container-rgb', hexToRgb(theme.container));
-      document.body.style.backgroundColor = theme.background;
-    }
-  }, [event, theme]);
+  useEffect(() => { applyTheme(event); }, [event]);
 
   useEffect(() => {
     const loadEvent = async () => {
@@ -91,23 +69,15 @@ export const Venue: React.FC = () => {
                     style={{
                       display: 'inline-block',
                       padding: '0.75rem 1.5rem',
-                      backgroundColor: theme.primary,
+                      backgroundColor: 'var(--theme-primary)',
                       color: 'white',
                       textDecoration: 'none',
                       borderRadius: '0.5rem',
                       fontWeight: 500,
-                      transition: 'background-color 0.2s'
+                      transition: 'background-color 0.2s, opacity 0.2s'
                     }}
-                    onMouseEnter={(e) => {
-                      // Darken primary color by 10%
-                      const primaryColor = theme.primary;
-                      e.currentTarget.style.backgroundColor = primaryColor;
-                      e.currentTarget.style.opacity = '0.9';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = theme.primary;
-                      e.currentTarget.style.opacity = '1';
-                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.9'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
                   >
                     📍 Get Directions (Google Maps)
                   </a>

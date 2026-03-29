@@ -4,12 +4,12 @@ import { Card } from '../../components/ui/Card/Card';
 import { Button } from '../../components/ui/Button/Button';
 import { getCurrentEventSlug } from '../../lib/eventResolver';
 import { guestLookup, fetchPublicAccommodations, fetchPublicEvent } from '../../lib/apiClient';
-import { useEventStore, getThemeColors } from '../../state/useEventStore';
+import { useEventStore } from '../../state/useEventStore';
+import { applyTheme } from '../../lib/applyTheme';
 import './Accommodation.css';
 
 export const Accommodation: React.FC = () => {
   const { event, setEvent } = useEventStore();
-  const theme = getThemeColors(event);
   const [step, setStep] = useState<'lookup' | 'results'>('lookup');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -52,27 +52,7 @@ export const Accommodation: React.FC = () => {
     }
   }, [event, step]);
 
-  const hexToRgb = (hex: string): string => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result
-      ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
-      : '37, 99, 235';
-  };
-
-  useEffect(() => {
-    if (event) {
-      const root = document.documentElement;
-      root.style.setProperty('--theme-primary', theme.primary);
-      root.style.setProperty('--theme-secondary', theme.secondary);
-      root.style.setProperty('--theme-text', theme.text);
-      root.style.setProperty('--theme-background', theme.background);
-      root.style.setProperty('--theme-accent', theme.accent);
-      root.style.setProperty('--theme-accent-rgb', hexToRgb(theme.accent));
-      root.style.setProperty('--theme-container', theme.container);
-      root.style.setProperty('--theme-container-rgb', hexToRgb(theme.container));
-      document.body.style.backgroundColor = theme.background;
-    }
-  }, [event, theme]);
+  useEffect(() => { applyTheme(event); }, [event]);
 
   if (event && event.accommodation_enabled === false) {
     return (

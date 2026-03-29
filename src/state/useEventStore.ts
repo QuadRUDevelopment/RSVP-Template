@@ -98,6 +98,7 @@ export const getThemeColors = (event: Event | null) => {
     container: theme.containerColor || '#2563eb',
     navFontColor: theme.navFontColor || '#6b7280',
     navFontSize: theme.navFontSize || 1,
+    fontPair: (theme.fontPair as string) || 'default',
   };
 };
 

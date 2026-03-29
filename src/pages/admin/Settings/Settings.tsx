@@ -663,6 +663,74 @@ export const Settings: React.FC = () => {
                 );
               })}
             </Card>
+
+            {/* Typography */}
+            <Card className="settings-section">
+              <h2>Typography</h2>
+              <p className="section-desc">
+                Choose a font pairing for your public site. The heading font is used for titles and
+                the body font for all other text. Changes take effect immediately on the public site.
+              </p>
+              <div className="form-group">
+                <label>Font Pairing</label>
+                <select
+                  value={formData.theme_json?.fontPair || 'default'}
+                  onChange={(e) => {
+                    const theme = formData.theme_json || {};
+                    handleChange('theme_json', { ...theme, fontPair: e.target.value });
+                  }}
+                  style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #e5e7eb', fontSize: '0.95rem' }}
+                >
+                  <option value="default">Default (Inter) — clean modern sans-serif</option>
+                  <option value="great-vibes">Great Vibes + Lato — flowing script + elegant body</option>
+                  <option value="pinyon-script">Pinyon Script + Lato — classic calligraphy + elegant body</option>
+                  <option value="dancing-script">Dancing Script + Raleway — romantic script + refined body</option>
+                  <option value="alex-brush">Alex Brush + Montserrat — playful script + modern body</option>
+                  <option value="tangerine">Tangerine + Source Sans 3 — tall formal script + airy body</option>
+                  <option value="niconne">Niconne + Nunito — modern calligraphy + soft body</option>
+                </select>
+                <small>
+                  Script heading fonts work best for event names, titles, and decorative headings.
+                  "Default" keeps the clean Inter font used throughout the admin panel.
+                </small>
+              </div>
+
+              {/* Live preview */}
+              {(() => {
+                const FONT_PAIRINGS = [
+                  { value: 'default',        heading: 'Inter',          body: 'Inter' },
+                  { value: 'great-vibes',    heading: 'Great Vibes',    body: 'Lato' },
+                  { value: 'pinyon-script',  heading: 'Pinyon Script',  body: 'Lato' },
+                  { value: 'dancing-script', heading: 'Dancing Script', body: 'Raleway' },
+                  { value: 'alex-brush',     heading: 'Alex Brush',     body: 'Montserrat' },
+                  { value: 'tangerine',      heading: 'Tangerine',      body: 'Source Sans 3' },
+                  { value: 'niconne',        heading: 'Niconne',        body: 'Nunito' },
+                ] as const;
+                const selected = FONT_PAIRINGS.find(p => p.value === (formData.theme_json?.fontPair || 'default')) ?? FONT_PAIRINGS[0];
+                const googleFamilies = [selected.heading, selected.body].filter(f => f !== 'Inter');
+                if (googleFamilies.length > 0) {
+                  const linkId = 'settings-font-preview-link';
+                  let link = document.getElementById(linkId) as HTMLLinkElement | null;
+                  if (!link) {
+                    link = document.createElement('link');
+                    link.id = linkId;
+                    link.rel = 'stylesheet';
+                    document.head.appendChild(link);
+                  }
+                  link.href = `https://fonts.googleapis.com/css2?${googleFamilies.map(f => `family=${encodeURIComponent(f)}&display=swap`).join('&')}`;
+                }
+                return (
+                  <div style={{ marginTop: '1rem', padding: '1.25rem 1.5rem', background: '#f9fafb', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
+                    <p style={{ fontFamily: `'${selected.heading}', cursive`, fontSize: '2rem', marginBottom: '0.5rem', color: '#111827', lineHeight: 1.2 }}>
+                      {formData.couple_names || 'Event Heading Preview'}
+                    </p>
+                    <p style={{ fontFamily: `'${selected.body}', sans-serif`, fontSize: '0.95rem', color: '#6b7280' }}>
+                      Body text preview — your invitation details, descriptions, and page content will appear in this font.
+                    </p>
+                  </div>
+                );
+              })()}
+            </Card>
           </>
         )}
 

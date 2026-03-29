@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Timeline } from 'primereact/timeline';
-import { useEventStore, getThemeColors } from '../../state/useEventStore';
+import { useEventStore } from '../../state/useEventStore';
 import { getCurrentEventSlug } from '../../lib/eventResolver';
 import { fetchPublicEvent, fetchPublicGallery, fetchPublicTimeline } from '../../lib/apiClient';
+import { applyTheme } from '../../lib/applyTheme';
 import { Button } from '../../components/ui/Button/Button';
 import { TopNav } from '../../components/layout/TopNav/TopNav';
 import { ScrollCarousel } from '../../components/gallery/ScrollCarousel/ScrollCarousel';
@@ -22,34 +23,7 @@ export const Home: React.FC = () => {
   const rsvpRef = useRef<HTMLDivElement>(null);
   const timelineScrollRef = useRef<HTMLDivElement>(null);
 
-  // Helper to convert hex to RGB
-  const hexToRgb = (hex: string): string => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result
-      ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
-      : '37, 99, 235'; // Default blue
-  };
-
-  // Apply theme colors to CSS variables
-  useEffect(() => {
-    if (event) {
-      const theme = getThemeColors(event);
-      const root = document.documentElement;
-      root.style.setProperty('--theme-primary', theme.primary);
-      root.style.setProperty('--theme-secondary', theme.secondary);
-      root.style.setProperty('--theme-text', theme.text);
-      root.style.setProperty('--theme-background', theme.background);
-      root.style.setProperty('--theme-accent', theme.accent);
-      root.style.setProperty('--theme-accent-rgb', hexToRgb(theme.accent));
-      root.style.setProperty('--theme-container', theme.container);
-      root.style.setProperty('--theme-container-rgb', hexToRgb(theme.container));
-      root.style.setProperty('--theme-nav-font-color', theme.navFontColor);
-      root.style.setProperty('--theme-nav-font-size', `${theme.navFontSize}rem`);
-      
-      // Also set background color on body/html
-      document.body.style.backgroundColor = theme.background;
-    }
-  }, [event]);
+  useEffect(() => { applyTheme(event); }, [event]);
 
   // Helper function to get section styles
   const getSectionStyles = (sectionKey: string): React.CSSProperties => {

@@ -5,12 +5,12 @@ import { Button } from '../../components/ui/Button/Button';
 import { GiftBooking } from '../../components/gift/GiftBooking/GiftBooking';
 import { getCurrentEventSlug } from '../../lib/eventResolver';
 import { fetchPublicGiftRegistry, fetchPublicEvent } from '../../lib/apiClient';
-import { useEventStore, getThemeColors } from '../../state/useEventStore';
+import { useEventStore } from '../../state/useEventStore';
+import { applyTheme } from '../../lib/applyTheme';
 import './GiftRegistry.css';
 
 export const GiftRegistry: React.FC = () => {
   const { event, setEvent } = useEventStore();
-  const theme = getThemeColors(event);
   const [gifts, setGifts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showBooking, setShowBooking] = useState(false);
@@ -63,23 +63,7 @@ export const GiftRegistry: React.FC = () => {
     );
   }
 
-  // Helper to convert hex to RGB
-  const hexToRgb = (hex: string): string => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result
-      ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
-      : '37, 99, 235';
-  };
-
-  // Apply theme colors
-  useEffect(() => {
-    if (event) {
-      const root = document.documentElement;
-      root.style.setProperty('--theme-primary', theme.primary);
-      root.style.setProperty('--theme-primary-rgb', hexToRgb(theme.primary));
-      root.style.setProperty('--theme-container-rgb', hexToRgb(theme.container));
-    }
-  }, [event, theme]);
+  useEffect(() => { applyTheme(event); }, [event]);
 
   const handleBookingChanged = () => {
     setRefreshKey(prev => prev + 1);
