@@ -107,6 +107,12 @@ export const Accommodation: React.FC = () => {
           <strong>How to get:</strong> Google Maps → Search venue → Share → Embed a map → Copy iframe src URL<br>
           <strong style="color: #10b981;">✓ No API key required!</strong> Embeds work without credentials.
         </small>
+        <label for="swal-phone" style="display: block; font-weight: 500; color: #374151; font-size: 0.875rem; margin-top: 1rem; margin-bottom: 0.5rem;">Contact Phone</label>
+        <input id="swal-phone" class="swal2-custom-input" type="tel" placeholder="+27 12 345 6789" value="${editingItem?.phone || ''}">
+        <small style="display: block; font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem; margin-bottom: 0.5rem;">Shown as a clickable call link on the accommodation card.</small>
+        <label for="swal-email" style="display: block; font-weight: 500; color: #374151; font-size: 0.875rem; margin-top: 1rem; margin-bottom: 0.5rem;">Contact Email</label>
+        <input id="swal-email" class="swal2-custom-input" type="email" placeholder="bookings@example.com" value="${editingItem?.email || ''}">
+        <small style="display: block; font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem; margin-bottom: 0.5rem;">Shown as a clickable email link on the accommodation card.</small>
         <label for="swal-audience" style="display: block; font-weight: 500; color: #374151; font-size: 0.875rem; margin-top: 1rem; margin-bottom: 0.5rem;">Audience</label>
         <select id="swal-audience" class="swal2-custom-select">
           ${groupOptions}
@@ -128,6 +134,8 @@ export const Accommodation: React.FC = () => {
           price: (document.getElementById('swal-price') as HTMLInputElement)?.value || '',
           address: (document.getElementById('swal-address') as HTMLInputElement)?.value || '',
           map_url: (document.getElementById('swal-map-url') as HTMLInputElement)?.value || '',
+          phone: (document.getElementById('swal-phone') as HTMLInputElement)?.value || '',
+          email: (document.getElementById('swal-email') as HTMLInputElement)?.value || '',
           audience_key: (document.getElementById('swal-audience') as HTMLSelectElement)?.value || 'all',
           sort_order: parseInt((document.getElementById('swal-sort') as HTMLInputElement)?.value || '0'),
         };

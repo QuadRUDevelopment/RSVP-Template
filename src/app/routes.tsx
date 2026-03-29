@@ -20,6 +20,8 @@ import { Groups } from '../pages/admin/Groups/Groups';
 import { CustomFields } from '../pages/admin/CustomFields/CustomFields';
 import { GiftRegistry } from '../pages/GiftRegistry/GiftRegistry';
 import { GiftRegistry as AdminGiftRegistry } from '../pages/admin/GiftRegistry/GiftRegistry';
+import { QA as AdminQA } from '../pages/admin/QA/QA';
+import { QA } from '../pages/QA/QA';
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +36,7 @@ export const router = createBrowserRouter([
       { path: 'menu', element: <Menu /> },
       { path: 'schedule', element: <Schedule /> },
       { path: 'gift-registry', element: <GiftRegistry /> },
+      { path: 'qa', element: <QA /> },
     ],
   },
   {
@@ -57,6 +60,7 @@ export const router = createBrowserRouter([
           { path: 'groups', element: <Groups /> },
           { path: 'custom-fields', element: <CustomFields /> },
           { path: 'gift-registry', element: <AdminGiftRegistry /> },
+          { path: 'qa', element: <AdminQA /> },
           { path: 'settings', element: <Settings /> },
         ],
       },

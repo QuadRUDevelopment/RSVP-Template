@@ -7,6 +7,7 @@ import { TopNav } from '../../components/layout/TopNav/TopNav';
 import { submitRSVP, fetchPublicEvent } from '../../lib/apiClient';
 import { getCurrentEventSlug } from '../../lib/eventResolver';
 import { useEventStore, getThemeColors } from '../../state/useEventStore';
+import { AccommodationCard } from '../Accommodation/Accommodation';
 import './RSVP.css';
 
 export const RSVP: React.FC = () => {
@@ -15,7 +16,6 @@ export const RSVP: React.FC = () => {
   const [step, setStep] = useState<'lookup' | 'form'>('lookup');
   const [guestData, setGuestData] = useState<any>(null);
 
-  // Load event data if not already loaded
   useEffect(() => {
     const loadEvent = async () => {
       if (!event) {
@@ -31,15 +31,13 @@ export const RSVP: React.FC = () => {
     loadEvent();
   }, [event, setEvent]);
 
-  // Helper to convert hex to RGB
   const hexToRgb = (hex: string): string => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
       ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
-      : '37, 99, 235'; // Default blue
+      : '37, 99, 235';
   };
 
-  // Apply theme colors
   useEffect(() => {
     if (event) {
       const root = document.documentElement;
@@ -62,66 +60,43 @@ export const RSVP: React.FC = () => {
 
   const handleRSVPSubmit = async (rsvpData: any) => {
     const slug = getCurrentEventSlug();
-    
+
     await submitRSVP({
       slug,
       inviteCode: guestData.guest.invite_code,
       rsvp: rsvpData,
     });
 
-    // Get meal choice name
     const mealChoice = guestData.menuItems?.find(
       (item: any) => item.id === rsvpData.mealChoiceId
     )?.name;
 
-    const guestName = guestData.guest.display_name || 
-                `${guestData.guest.first_name} ${guestData.guest.last_name}`;
+    const guestName =
+      guestData.guest.display_name ||
+      `${guestData.guest.first_name} ${guestData.guest.last_name}`;
     const plusOnesCount = rsvpData.plusOnes?.length || 0;
-    const imageUrl = rsvpData.status === 'yes' 
-      ? event?.rsvp_yes_image_url 
-      : event?.rsvp_no_image_url;
+    const imageUrl =
+      rsvpData.status === 'yes' ? event?.rsvp_yes_image_url : event?.rsvp_no_image_url;
 
-    // Show confirmation with SweetAlert2
     const getMessage = () => {
       switch (rsvpData.status) {
         case 'yes':
-          return {
-            title: "Thank you!",
-            message: "We can't wait to celebrate with you!",
-            icon: 'success' as const,
-          };
+          return { title: 'Thank you!', message: "We can't wait to celebrate with you!", icon: 'success' as const };
         case 'no':
-          return {
-            title: "We're sorry you can't make it",
-            message: "Thank you for letting us know. We'll miss you!",
-            icon: 'info' as const,
-          };
+          return { title: "We're sorry you can't make it", message: "Thank you for letting us know. We'll miss you!", icon: 'info' as const };
         case 'maybe':
-          return {
-            title: "Thanks for letting us know",
-            message: "Please update your RSVP when you know for sure.",
-            icon: 'info' as const,
-          };
+          return { title: 'Thanks for letting us know', message: 'Please update your RSVP when you know for sure.', icon: 'info' as const };
         default:
-          return {
-            title: "Thank you!",
-            message: "Your RSVP has been received.",
-            icon: 'success' as const,
-          };
+          return { title: 'Thank you!', message: 'Your RSVP has been received.', icon: 'success' as const };
       }
     };
 
     const { title, message, icon } = getMessage();
     let html = `<p>${message}</p>`;
-    
     if (rsvpData.status === 'yes') {
       html += `<p><strong>Guest:</strong> ${guestName}</p>`;
-      if (plusOnesCount > 0) {
-        html += `<p><strong>Plus Ones:</strong> ${plusOnesCount}</p>`;
-      }
-      if (mealChoice) {
-        html += `<p><strong>Meal Choice:</strong> ${mealChoice}</p>`;
-      }
+      if (plusOnesCount > 0) html += `<p><strong>Plus Ones:</strong> ${plusOnesCount}</p>`;
+      if (mealChoice) html += `<p><strong>Meal Choice:</strong> ${mealChoice}</p>`;
     }
 
     await Swal.fire({
@@ -136,10 +111,11 @@ export const RSVP: React.FC = () => {
       showCancelButton: false,
     });
 
-    // Reset form
     setStep('lookup');
     setGuestData(null);
   };
+
+  const guestAccommodations: any[] = guestData?.accommodations || [];
 
   return (
     <div className="rsvp-page">
@@ -148,25 +124,48 @@ export const RSVP: React.FC = () => {
         {step === 'lookup' ? (
           <div className="rsvp-section">
             <h1>RSVP</h1>
-            <p className="rsvp-subtitle">
-              Please enter your invite code or name to continue
-            </p>
+            <p className="rsvp-subtitle">Please enter your invite code or name to continue</p>
             <GuestLookup onGuestFound={handleGuestFound} />
           </div>
         ) : (
           <div className="rsvp-section">
-            <h1>RSVP for {guestData?.guest?.display_name || 
-              `${guestData?.guest?.first_name} ${guestData?.guest?.last_name}`}</h1>
+            <h1>
+              RSVP for{' '}
+              {guestData?.guest?.display_name ||
+                `${guestData?.guest?.first_name} ${guestData?.guest?.last_name}`}
+            </h1>
             <RSVPForm
               guest={guestData.guest}
               rsvp={guestData.rsvp}
               menuItems={event?.menu_enabled !== false ? guestData.menuItems : []}
               onSubmit={handleRSVPSubmit}
             />
+
+            {/* Personalised accommodation section */}
+            {guestAccommodations.length > 0 && (
+              <div className="rsvp-accommodation-section">
+                <div className="rsvp-accommodation-header">
+                  <div className="rsvp-accommodation-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                      <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h2>Recommended Accommodation</h2>
+                    <p>Accommodation options selected for your group</p>
+                  </div>
+                </div>
+                <div className="rsvp-accommodation-grid">
+                  {guestAccommodations.map((acc: any) => (
+                    <AccommodationCard key={acc.id} acc={acc} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
     </div>
   );
 };
-

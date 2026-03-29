@@ -39,13 +39,62 @@
   opacity: 0.8;
 }
 
+/* ── Personalised accommodation strip ── */
+.rsvp-accommodation-section {
+  margin-top: 3rem;
+  padding-top: 2.5rem;
+  border-top: 2px solid rgba(var(--theme-container-rgb, 37, 99, 235), 0.15);
+}
+
+.rsvp-accommodation-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.rsvp-accommodation-icon {
+  width: 44px;
+  height: 44px;
+  background: rgba(var(--theme-container-rgb, 37, 99, 235), 0.1);
+  border-radius: 0.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--theme-primary, #2563eb);
+  flex-shrink: 0;
+}
+
+.rsvp-accommodation-header h2 {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--theme-text, #111827);
+  margin: 0 0 0.25rem;
+}
+
+.rsvp-accommodation-header p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.rsvp-accommodation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
 @media (max-width: 768px) {
   .rsvp-section {
     padding: 1.5rem;
   }
-  
+
   .rsvp-section h1 {
     font-size: 1.5rem;
+  }
+
+  .rsvp-accommodation-grid {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -11,41 +11,33 @@ if (!supabaseUrl || !supabaseServiceKey) {
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
 export const handler: Handler = async (event) => {
-  // Handle preflight OPTIONS request first (before auth check)
   if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
-      body: '',
-    };
+    return { statusCode: 200, headers: corsHeaders, body: '' };
   }
 
-  // Verify Supabase auth token
   const authResult = await verifySupabaseAuth(event);
   if (!authResult.valid) {
     return {
       statusCode: 401,
-      headers: { 
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-      },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       body: JSON.stringify({ error: authResult.error || 'Unauthorized' }),
     };
   }
 
   const slug = event.queryStringParameters?.slug;
 
-  // GET - List all accommodations
   if (event.httpMethod === 'GET') {
     if (!slug) {
       return {
         statusCode: 400,
-        headers: { 'Access-Control-Allow-Origin': '*' },
+        headers: corsHeaders,
         body: JSON.stringify({ error: 'Missing slug parameter' }),
       };
     }
@@ -60,7 +52,7 @@ export const handler: Handler = async (event) => {
       if (!eventData) {
         return {
           statusCode: 404,
-          headers: { 'Access-Control-Allow-Origin': '*' },
+          headers: corsHeaders,
           body: JSON.stringify({ error: 'Event not found' }),
         };
       }
@@ -72,31 +64,28 @@ export const handler: Handler = async (event) => {
         .order('sort_order', { ascending: true });
 
       if (error) {
+        console.error('Error fetching accommodations:', error);
         return {
           statusCode: 500,
-          headers: { 'Access-Control-Allow-Origin': '*' },
-          body: JSON.stringify({ error: 'Failed to fetch accommodations' }),
+          headers: corsHeaders,
+          body: JSON.stringify({ error: 'Failed to fetch accommodations', details: error.message }),
         };
       }
 
       return {
         statusCode: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         body: JSON.stringify({ accommodations: data || [] }),
       };
     } catch (err: any) {
       return {
         statusCode: 500,
-        headers: { 'Access-Control-Allow-Origin': '*' },
+        headers: corsHeaders,
         body: JSON.stringify({ error: err.message }),
       };
     }
   }
 
-  // POST - Create accommodation
   if (event.httpMethod === 'POST') {
     try {
       const body = JSON.parse(event.body || '{}');
@@ -106,7 +95,7 @@ export const handler: Handler = async (event) => {
       if (!eventSlug) {
         return {
           statusCode: 400,
-          headers: { 'Access-Control-Allow-Origin': '*' },
+          headers: corsHeaders,
           body: JSON.stringify({ error: 'Missing slug' }),
         };
       }
@@ -120,46 +109,44 @@ export const handler: Handler = async (event) => {
       if (!eventData) {
         return {
           statusCode: 404,
-          headers: { 'Access-Control-Allow-Origin': '*' },
+          headers: corsHeaders,
           body: JSON.stringify({ error: 'Event not found' }),
         };
       }
 
       const { data, error } = await supabase
         .from('accommodations')
-        .insert({
-          ...accommodationData,
-          event_id: eventData.id,
-        })
+        .insert({ ...accommodationData, event_id: eventData.id })
         .select()
         .single();
 
       if (error) {
+        console.error('Error creating accommodation:', error);
         return {
           statusCode: 500,
-          headers: { 'Access-Control-Allow-Origin': '*' },
-          body: JSON.stringify({ error: 'Failed to create accommodation' }),
+          headers: corsHeaders,
+          body: JSON.stringify({
+            error: 'Failed to create accommodation',
+            details: error.message,
+            hint: error.hint || undefined,
+          }),
         };
       }
 
       return {
         statusCode: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       };
     } catch (err: any) {
       return {
         statusCode: 500,
-        headers: { 'Access-Control-Allow-Origin': '*' },
+        headers: corsHeaders,
         body: JSON.stringify({ error: err.message }),
       };
     }
   }
 
-  // PUT - Update accommodation
   if (event.httpMethod === 'PUT') {
     try {
       const body = JSON.parse(event.body || '{}');
@@ -168,7 +155,7 @@ export const handler: Handler = async (event) => {
       if (!id) {
         return {
           statusCode: 400,
-          headers: { 'Access-Control-Allow-Origin': '*' },
+          headers: corsHeaders,
           body: JSON.stringify({ error: 'Missing accommodation id' }),
         };
       }
@@ -181,31 +168,32 @@ export const handler: Handler = async (event) => {
         .single();
 
       if (error) {
+        console.error('Error updating accommodation:', error);
         return {
           statusCode: 500,
-          headers: { 'Access-Control-Allow-Origin': '*' },
-          body: JSON.stringify({ error: 'Failed to update accommodation' }),
+          headers: corsHeaders,
+          body: JSON.stringify({
+            error: 'Failed to update accommodation',
+            details: error.message,
+            hint: error.hint || undefined,
+          }),
         };
       }
 
       return {
         statusCode: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       };
     } catch (err: any) {
       return {
         statusCode: 500,
-        headers: { 'Access-Control-Allow-Origin': '*' },
+        headers: corsHeaders,
         body: JSON.stringify({ error: err.message }),
       };
     }
   }
 
-  // DELETE - Delete accommodation
   if (event.httpMethod === 'DELETE') {
     try {
       const id = event.queryStringParameters?.id;
@@ -213,7 +201,7 @@ export const handler: Handler = async (event) => {
       if (!id) {
         return {
           statusCode: 400,
-          headers: { 'Access-Control-Allow-Origin': '*' },
+          headers: corsHeaders,
           body: JSON.stringify({ error: 'Missing accommodation id' }),
         };
       }
@@ -224,25 +212,23 @@ export const handler: Handler = async (event) => {
         .eq('id', id);
 
       if (error) {
+        console.error('Error deleting accommodation:', error);
         return {
           statusCode: 500,
-          headers: { 'Access-Control-Allow-Origin': '*' },
-          body: JSON.stringify({ error: 'Failed to delete accommodation' }),
+          headers: corsHeaders,
+          body: JSON.stringify({ error: 'Failed to delete accommodation', details: error.message }),
         };
       }
 
       return {
         statusCode: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         body: JSON.stringify({ success: true }),
       };
     } catch (err: any) {
       return {
         statusCode: 500,
-        headers: { 'Access-Control-Allow-Origin': '*' },
+        headers: corsHeaders,
         body: JSON.stringify({ error: err.message }),
       };
     }
@@ -250,8 +236,7 @@ export const handler: Handler = async (event) => {
 
   return {
     statusCode: 405,
-    headers: { 'Access-Control-Allow-Origin': '*' },
+    headers: corsHeaders,
     body: JSON.stringify({ error: 'Method not allowed' }),
   };
 };
-

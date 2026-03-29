@@ -152,6 +152,13 @@ export const AdminLayout: React.FC = () => {
             Custom RSVP Fields
           </Link>
           <Link 
+            to="/admin/qa" 
+            className={`nav-item ${isActive('/admin/qa') ? 'active' : ''}`}
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            Q&amp;A / FAQ
+          </Link>
+          <Link 
             to="/admin/settings" 
             className={`nav-item ${isActive('/admin/settings') ? 'active' : ''}`}
             onClick={() => setMobileMenuOpen(false)}

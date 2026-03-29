@@ -3,7 +3,14 @@ import { Button } from '../../ui/Button/Button';
 import { PlusOnes } from '../PlusOnes/PlusOnes';
 import { fetchPublicCustomFields } from '../../../lib/apiClient';
 import { getCurrentEventSlug } from '../../../lib/eventResolver';
+import { useEventStore } from '../../../state/useEventStore';
 import './RSVPForm.css';
+
+const DEFAULT_RSVP_OPTIONS = {
+  yes: { label: 'Yes', emoji: '🎉', enabled: true },
+  no: { label: 'No', emoji: '😢', enabled: true },
+  maybe: { label: 'Maybe', emoji: '🤔', enabled: true },
+};
 
 interface RSVPFormProps {
   guest: any;
@@ -18,9 +25,22 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({
   menuItems = [],
   onSubmit,
 }) => {
-  const [status, setStatus] = useState<'yes' | 'no' | 'maybe'>(
-    rsvp?.status || 'yes'
-  );
+  const { event } = useEventStore();
+
+  // Build effective RSVP options from event config (or defaults)
+  const savedOpts = event?.rsvp_options || {};
+  const rsvpOptions = (['yes', 'no', 'maybe'] as const)
+    .map((key) => ({
+      value: key,
+      ...DEFAULT_RSVP_OPTIONS[key],
+      ...(savedOpts[key] || {}),
+    }))
+    .filter((o) => o.enabled !== false);
+
+  const defaultStatus = (rsvp?.status as 'yes' | 'no' | 'maybe') ||
+    (rsvpOptions[0]?.value ?? 'yes');
+
+  const [status, setStatus] = useState<'yes' | 'no' | 'maybe'>(defaultStatus);
   const [plusOnes, setPlusOnes] = useState<Array<{ name: string; mealChoiceId?: string }>>(
     rsvp?.plusOnes || []
   );
@@ -145,27 +165,17 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({
       <div className="form-section">
         <label className="section-label">Will you be attending?</label>
         <div className="attendance-buttons">
-          <button
-            type="button"
-            className={`attendance-btn ${status === 'yes' ? 'active' : ''}`}
-            onClick={() => setStatus('yes')}
-          >
-            Yes
-          </button>
-          <button
-            type="button"
-            className={`attendance-btn ${status === 'maybe' ? 'active' : ''}`}
-            onClick={() => setStatus('maybe')}
-          >
-            Maybe
-          </button>
-          <button
-            type="button"
-            className={`attendance-btn ${status === 'no' ? 'active' : ''}`}
-            onClick={() => setStatus('no')}
-          >
-            No
-          </button>
+          {rsvpOptions.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              className={`attendance-btn ${status === opt.value ? 'active' : ''}`}
+              onClick={() => setStatus(opt.value)}
+            >
+              {opt.emoji && <span className="attendance-emoji">{opt.emoji}</span>}
+              {opt.label}
+            </button>
+          ))}
         </div>
       </div>
 

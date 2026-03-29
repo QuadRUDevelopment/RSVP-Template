@@ -86,6 +86,7 @@ export const TopNav: React.FC = () => {
     ...(event?.menu_enabled !== false ? [{ path: '/menu', label: 'Spyskaart' }] : []),
     ...(event?.schedule_enabled !== false ? [{ path: '/schedule', label: 'Skedule' }] : []),
     ...(event?.gift_registry_enabled === true ? [{ path: '/gift-registry', label: 'Gift Registry' }] : []),
+    ...(event?.qa_enabled === true ? [{ path: '/qa', label: 'Q&A' }] : []),
   ];
 
   const handleLinkClick = () => {

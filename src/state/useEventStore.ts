@@ -54,6 +54,18 @@ export interface Event {
       overlay_opacity?: number;
     };
   };
+  // Additional notes shown above invitation text on home RSVP section
+  additional_notes?: string;
+  // Accommodation access control
+  accommodation_auth_required?: boolean;
+  // Configurable RSVP response options
+  rsvp_options?: {
+    yes?: { label?: string; emoji?: string; enabled?: boolean };
+    no?: { label?: string; emoji?: string; enabled?: boolean };
+    maybe?: { label?: string; emoji?: string; enabled?: boolean };
+  };
+  // Q&A / FAQ feature
+  qa_enabled?: boolean;
 }
 
 interface EventStore {

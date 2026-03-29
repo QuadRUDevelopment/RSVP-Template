@@ -120,7 +120,33 @@
   color: var(--theme-primary, #2563eb);
 }
 
+.accommodation-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.875rem;
+  background: rgba(var(--theme-container-rgb, 37, 99, 235), 0.05);
+  border: 1px solid rgba(var(--theme-container-rgb, 37, 99, 235), 0.15);
+  border-radius: 0.5rem;
+}
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--theme-primary, #2563eb);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: opacity 0.15s;
+}
+
+.contact-link:hover { opacity: 0.75; }
+
 .accommodation-address {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
   padding: 0.75rem;
   background: var(--theme-background, #f3f4f6);
   border-radius: 0.5rem;

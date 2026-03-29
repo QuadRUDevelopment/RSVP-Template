@@ -470,6 +470,11 @@ export const Home: React.FC = () => {
         <div className="section-content">
           <h2 className="section-title">RSVP</h2>
           <div className="rsvp-content">
+            {event?.additional_notes && (
+              <div className="additional-notes">
+                {event.additional_notes}
+              </div>
+            )}
             {event?.invitation_text && (
               <div className="invitation-text">
                 {event.invitation_text}

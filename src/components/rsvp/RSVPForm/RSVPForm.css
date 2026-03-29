@@ -40,6 +40,15 @@
   font-weight: 500;
   transition: all 0.2s;
   color: var(--theme-text, #111827);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.attendance-emoji {
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
 .attendance-btn:hover {

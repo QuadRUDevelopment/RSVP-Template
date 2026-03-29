@@ -232,7 +232,15 @@ export async function adminRequest(
     if (response.status === 401) {
       throw new Error('Unauthorized');
     }
-    throw new Error(`Request failed: ${response.statusText}`);
+    // Parse the response body for a detailed error message
+    try {
+      const errBody = await response.json();
+      const msg = errBody.details || errBody.error || errBody.message || response.statusText;
+      throw new Error(msg);
+    } catch (parseErr: any) {
+      if (parseErr.message && parseErr.message !== response.statusText) throw parseErr;
+      throw new Error(`Request failed: ${response.statusText}`);
+    }
   }
   
   return response.json();
@@ -292,5 +300,52 @@ export async function fetchPublicCustomFields(slug: string) {
     throw new Error(`Failed to fetch custom fields: ${response.statusText}`);
   }
   return response.json();
+}
+
+// Public: Fetch accommodations (open mode — no auth required)
+export async function fetchPublicAccommodations(slug: string) {
+  const response = await fetch(`${API_BASE}/public-accommodation?slug=${encodeURIComponent(slug)}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch accommodations: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+// Public: Fetch Q&A items
+export async function fetchPublicQA(slug: string) {
+  const response = await fetch(`${API_BASE}/public-qa?slug=${encodeURIComponent(slug)}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch Q&A: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+// Admin: Q&A CRUD
+export async function fetchAdminQA(slug: string, token: string) {
+  return adminRequest(`admin-qa?slug=${encodeURIComponent(slug)}`, { method: 'GET' }, token);
+}
+
+export async function createQAItem(slug: string, itemData: any, token: string) {
+  return adminRequest(
+    `admin-qa?slug=${encodeURIComponent(slug)}`,
+    { method: 'POST', body: JSON.stringify(itemData) },
+    token
+  );
+}
+
+export async function updateQAItem(slug: string, itemData: any, token: string) {
+  return adminRequest(
+    `admin-qa?slug=${encodeURIComponent(slug)}`,
+    { method: 'PUT', body: JSON.stringify(itemData) },
+    token
+  );
+}
+
+export async function deleteQAItem(slug: string, itemId: string, token: string) {
+  return adminRequest(
+    `admin-qa?slug=${encodeURIComponent(slug)}&id=${itemId}`,
+    { method: 'DELETE' },
+    token
+  );
 }
 
