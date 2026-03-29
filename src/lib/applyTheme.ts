@@ -100,8 +100,10 @@ export function applyTheme(event: Event | null) {
 
   // Colors
   root.style.setProperty('--theme-primary', theme.primary);
+  root.style.setProperty('--theme-primary-rgb', hexToRgb(theme.primary));
   root.style.setProperty('--theme-secondary', theme.secondary);
   root.style.setProperty('--theme-text', theme.text);
+  root.style.setProperty('--theme-text-rgb', hexToRgb(theme.text));
   root.style.setProperty('--theme-background', theme.background);
   root.style.setProperty('--theme-accent', theme.accent);
   root.style.setProperty('--theme-accent-rgb', hexToRgb(theme.accent));
