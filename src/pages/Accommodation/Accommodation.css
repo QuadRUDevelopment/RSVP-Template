@@ -88,22 +88,30 @@
   color: var(--theme-text, #111827);
 }
 
+/* Full-width single-column stack */
 .accommodation-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
   margin-bottom: 2rem;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
+/* Card: full width, centred content */
 .accommodation-card {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 1rem;
+  text-align: center;
+  width: 100%;
 }
 
 .accommodation-card h3 {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--theme-text, #111827);
   margin: 0;
 }
@@ -111,7 +119,7 @@
 .accommodation-description {
   color: #6b7280;
   line-height: 1.6;
-  flex: 1;
+  max-width: 520px;
 }
 
 .accommodation-price {
@@ -120,19 +128,23 @@
   color: var(--theme-primary, #2563eb);
 }
 
+/* Contact block — centre links */
 .accommodation-contact {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
-  padding: 0.875rem;
+  padding: 0.875rem 1.25rem;
   background: rgba(var(--theme-container-rgb, 37, 99, 235), 0.05);
   border: 1px solid rgba(var(--theme-container-rgb, 37, 99, 235), 0.15);
   border-radius: 0.5rem;
+  width: 100%;
 }
 
 .contact-link {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   color: var(--theme-primary, #2563eb);
   text-decoration: none;
@@ -143,16 +155,20 @@
 
 .contact-link:hover { opacity: 0.75; }
 
+/* Address — centred */
 .accommodation-address {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   background: var(--theme-background, #f3f4f6);
   border-radius: 0.5rem;
   color: var(--theme-text, #374151);
   font-size: 0.875rem;
   line-height: 1.5;
+  width: 100%;
+  text-align: center;
 }
 
 .accommodation-address strong {
@@ -162,25 +178,28 @@
 }
 
 .accommodation-map {
-  margin: 1rem 0;
+  width: 100%;
   border-radius: 0.5rem;
   overflow: hidden;
 }
 
+/* Action buttons — centred row */
 .accommodation-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
-  margin-top: 1rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+  width: 100%;
 }
 
 @media (max-width: 768px) {
   .accommodation-container {
     padding: 1rem;
   }
-  
+
   .accommodation-grid {
-    grid-template-columns: 1fr;
+    max-width: 100%;
   }
 }
 
