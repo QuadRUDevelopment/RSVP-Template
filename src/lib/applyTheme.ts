@@ -112,6 +112,15 @@ export function applyTheme(event: Event | null) {
   root.style.setProperty('--theme-text-additional-notes', theme.textAdditionalNotes);
   root.style.setProperty('--theme-text-rsvp', theme.textRsvp);
   root.style.setProperty('--theme-text-guest-message', theme.textGuestMessage);
+  // Q&A accordion style
+  root.style.setProperty('--theme-qa-topic-color', theme.qaTopicColor);
+  root.style.setProperty('--theme-qa-topic-size', `${theme.qaTopicSize}rem`);
+  root.style.setProperty('--theme-qa-answer-color', theme.qaAnswerColor);
+  if (theme.qaItemBg) {
+    root.style.setProperty('--theme-qa-item-bg', theme.qaItemBg);
+  } else {
+    root.style.removeProperty('--theme-qa-item-bg');
+  }
   root.style.setProperty('--theme-background', theme.background);
   root.style.setProperty('--theme-accent', theme.accent);
   root.style.setProperty('--theme-accent-rgb', hexToRgb(theme.accent));

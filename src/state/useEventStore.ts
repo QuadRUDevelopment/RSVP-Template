@@ -109,6 +109,11 @@ export const getThemeColors = (event: Event | null) => {
     textAdditionalNotes: tc.additionalNotes || baseText,
     textRsvp: tc.rsvp || baseText,
     textGuestMessage: tc.guestMessage || '#4b5563',
+    // ── Q&A accordion style ──
+    qaTopicColor: theme.qa?.topicColor || baseText,
+    qaTopicSize: theme.qa?.topicSize || 1,
+    qaAnswerColor: theme.qa?.answerColor || '#374151',
+    qaItemBg: theme.qa?.itemBg || '',
   };
 };
 

@@ -767,6 +767,128 @@ export const Settings: React.FC = () => {
               })}
             </Card>
 
+            {/* Q&A Style */}
+            <Card className="settings-section">
+              <h2>Q&amp;A Style</h2>
+              <p className="section-desc">
+                Customise the look of the Q&amp;A accordion on the public site. Leave fields blank to use the theme defaults.
+              </p>
+
+              {/* Topic / question */}
+              <div className="form-group">
+                <label>Topic / Question Color</label>
+                <div className="color-input-row">
+                  <input
+                    type="color"
+                    value={formData.theme_json?.qa?.topicColor || '#111827'}
+                    onChange={(e) => {
+                      const t = formData.theme_json || {};
+                      handleChange('theme_json', { ...t, qa: { ...t.qa, topicColor: e.target.value } });
+                    }}
+                    className="color-swatch"
+                  />
+                  <input
+                    type="text"
+                    value={formData.theme_json?.qa?.topicColor || '#111827'}
+                    onChange={(e) => {
+                      const t = formData.theme_json || {};
+                      handleChange('theme_json', { ...t, qa: { ...t.qa, topicColor: e.target.value } });
+                    }}
+                    placeholder="#111827"
+                    style={{ flex: 1 }}
+                  />
+                  <button type="button" style={{ padding: '0.4rem 0.6rem', fontSize: '0.8rem', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '6px', cursor: 'pointer' }}
+                    onClick={() => {
+                      const t = formData.theme_json || {};
+                      const qa = { ...t.qa }; delete qa.topicColor;
+                      handleChange('theme_json', { ...t, qa });
+                    }}>Reset</button>
+                </div>
+                <small>The question / topic label shown on each accordion row.</small>
+              </div>
+
+              {/* Topic size */}
+              <div className="form-group">
+                <label>Topic / Question Font Size (rem)</label>
+                <input
+                  type="number"
+                  min="0.75" max="1.5" step="0.0625"
+                  value={formData.theme_json?.qa?.topicSize ?? 1}
+                  onChange={(e) => {
+                    const t = formData.theme_json || {};
+                    handleChange('theme_json', { ...t, qa: { ...t.qa, topicSize: parseFloat(e.target.value) || 1 } });
+                  }}
+                />
+                <small>Default: 1rem. Recommended range: 0.875–1.25rem.</small>
+              </div>
+
+              {/* Answer color */}
+              <div className="form-group">
+                <label>Answer / Description Color</label>
+                <div className="color-input-row">
+                  <input
+                    type="color"
+                    value={formData.theme_json?.qa?.answerColor || '#374151'}
+                    onChange={(e) => {
+                      const t = formData.theme_json || {};
+                      handleChange('theme_json', { ...t, qa: { ...t.qa, answerColor: e.target.value } });
+                    }}
+                    className="color-swatch"
+                  />
+                  <input
+                    type="text"
+                    value={formData.theme_json?.qa?.answerColor || '#374151'}
+                    onChange={(e) => {
+                      const t = formData.theme_json || {};
+                      handleChange('theme_json', { ...t, qa: { ...t.qa, answerColor: e.target.value } });
+                    }}
+                    placeholder="#374151"
+                    style={{ flex: 1 }}
+                  />
+                  <button type="button" style={{ padding: '0.4rem 0.6rem', fontSize: '0.8rem', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '6px', cursor: 'pointer' }}
+                    onClick={() => {
+                      const t = formData.theme_json || {};
+                      const qa = { ...t.qa }; delete qa.answerColor;
+                      handleChange('theme_json', { ...t, qa });
+                    }}>Reset</button>
+                </div>
+                <small>The expanded answer / description text inside each accordion item.</small>
+              </div>
+
+              {/* Item background */}
+              <div className="form-group">
+                <label>Item Background Color</label>
+                <div className="color-input-row">
+                  <input
+                    type="color"
+                    value={formData.theme_json?.qa?.itemBg || '#ffffff'}
+                    onChange={(e) => {
+                      const t = formData.theme_json || {};
+                      handleChange('theme_json', { ...t, qa: { ...t.qa, itemBg: e.target.value } });
+                    }}
+                    className="color-swatch"
+                  />
+                  <input
+                    type="text"
+                    value={formData.theme_json?.qa?.itemBg || ''}
+                    onChange={(e) => {
+                      const t = formData.theme_json || {};
+                      handleChange('theme_json', { ...t, qa: { ...t.qa, itemBg: e.target.value } });
+                    }}
+                    placeholder="Leave blank for theme default"
+                    style={{ flex: 1 }}
+                  />
+                  <button type="button" style={{ padding: '0.4rem 0.6rem', fontSize: '0.8rem', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '6px', cursor: 'pointer' }}
+                    onClick={() => {
+                      const t = formData.theme_json || {};
+                      const qa = { ...t.qa }; delete qa.itemBg;
+                      handleChange('theme_json', { ...t, qa });
+                    }}>Reset</button>
+                </div>
+                <small>Background of each accordion card. Leave blank to use the automatic theme-tinted default.</small>
+              </div>
+            </Card>
+
             {/* Typography */}
             <Card className="settings-section">
               <h2>Typography</h2>
