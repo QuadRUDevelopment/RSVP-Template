@@ -606,6 +606,10 @@
   margin: 0 auto;
 }
 
+.rsvp-section .section-title {
+  color: var(--theme-text-rsvp, var(--theme-text-heading, var(--theme-text, #111827)));
+}
+
 .additional-notes {
   font-size: 1rem;
   line-height: 1.7;
