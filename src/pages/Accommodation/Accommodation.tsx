@@ -260,7 +260,12 @@ export const AccommodationCard: React.FC<{ acc: any }> = ({ acc }) => {
           <Button
             variant="outline"
             size="medium"
-            onClick={() => window.open(acc.url, '_blank')}
+            onClick={() => {
+              const url = acc.url.startsWith('http://') || acc.url.startsWith('https://')
+                ? acc.url
+                : `https://${acc.url}`;
+              window.open(url, '_blank', 'noopener,noreferrer');
+            }}
           >
             View Details
           </Button>
