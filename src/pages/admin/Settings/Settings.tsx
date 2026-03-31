@@ -325,6 +325,103 @@ export const Settings: React.FC = () => {
               ))}
             </Card>
 
+            {/* ── Text Colors ── */}
+            <Card className="settings-section">
+              <h2>Text Colors</h2>
+              <p className="section-desc">
+                Override the text color for specific areas of your public site. Leave at default to inherit the main Text Color set above.
+              </p>
+              {(
+                [
+                  {
+                    key: 'heading',
+                    label: 'Page Headings',
+                    desc: 'H1 titles on every public page (e.g. "Plek", "Spyskaart")',
+                    default: '#111827',
+                  },
+                  {
+                    key: 'story',
+                    label: 'Story Text',
+                    desc: 'The story/about paragraph on the home page',
+                    default: '#4b5563',
+                  },
+                  {
+                    key: 'invitation',
+                    label: 'Invitation Text',
+                    desc: '"We are so excited to celebrate…" text on the home RSVP section',
+                    default: '#111827',
+                  },
+                  {
+                    key: 'additionalNotes',
+                    label: 'Additional Notes Text',
+                    desc: 'The notes block displayed above the invitation text',
+                    default: '#111827',
+                  },
+                  {
+                    key: 'rsvp',
+                    label: 'RSVP Page Text',
+                    desc: 'Labels and copy shown on the RSVP form page',
+                    default: '#111827',
+                  },
+                  {
+                    key: 'muted',
+                    label: 'Muted / Secondary Text',
+                    desc: 'Descriptions, captions, and helper text across all pages',
+                    default: '#6b7280',
+                  },
+                ] as const
+              ).map(({ key, label, desc, default: def }) => {
+                const tc = formData.theme_json?.textColors || {};
+                const value = tc[key] || def;
+                return (
+                  <div className="form-group" key={key}>
+                    <label>{label}</label>
+                    <div className="color-input-row">
+                      <input
+                        type="color"
+                        value={value}
+                        onChange={(e) => {
+                          const theme = formData.theme_json || {};
+                          handleChange('theme_json', {
+                            ...theme,
+                            textColors: { ...tc, [key]: e.target.value },
+                          });
+                        }}
+                        className="color-swatch"
+                      />
+                      <input
+                        type="text"
+                        value={value}
+                        onChange={(e) => {
+                          const theme = formData.theme_json || {};
+                          handleChange('theme_json', {
+                            ...theme,
+                            textColors: { ...tc, [key]: e.target.value },
+                          });
+                        }}
+                        placeholder={def}
+                        style={{ flex: 1 }}
+                      />
+                      <button
+                        type="button"
+                        title="Reset to default"
+                        style={{ padding: '0.4rem 0.6rem', fontSize: '0.8rem', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '6px', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                        onClick={() => {
+                          const theme = formData.theme_json || {};
+                          const updated = { ...tc };
+                          delete updated[key];
+                          handleChange('theme_json', { ...theme, textColors: updated });
+                        }}
+                      >
+                        Reset
+                      </button>
+                    </div>
+                    <small>{desc}</small>
+                  </div>
+                );
+              })}
+            </Card>
+
             <Card className="settings-section">
               <h2>Top Navigation</h2>
               <p className="section-desc">Customize navigation bar appearance.</p>

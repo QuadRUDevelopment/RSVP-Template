@@ -89,16 +89,25 @@ export const useEventStore = create<EventStore>((set) => ({
 // Helper function to get theme colors with defaults
 export const getThemeColors = (event: Event | null) => {
   const theme = event?.theme_json || {};
+  const tc = theme.textColors || {};          // nested per-area overrides
+  const baseText = theme.textColor || '#111827';
   return {
     primary: theme.primaryColor || '#2563eb',
     secondary: theme.secondaryColor || '#64748b',
-    text: theme.textColor || '#111827',
+    text: baseText,
     background: theme.backgroundColor || '#ffffff',
     accent: theme.accentColor || '#2563eb',
     container: theme.containerColor || '#2563eb',
     navFontColor: theme.navFontColor || '#6b7280',
     navFontSize: theme.navFontSize || 1,
     fontPair: (theme.fontPair as string) || 'default',
+    // ── Per-area text colours (all default to baseText or a sensible fallback) ──
+    textHeading: tc.heading || baseText,
+    textMuted: tc.muted || '#6b7280',
+    textStory: tc.story || '#4b5563',
+    textInvitation: tc.invitation || baseText,
+    textAdditionalNotes: tc.additionalNotes || baseText,
+    textRsvp: tc.rsvp || baseText,
   };
 };
 

@@ -19,7 +19,7 @@
   font-weight: 700;
   margin-bottom: 2rem;
   text-align: center;
-  color: var(--theme-text, #111827);
+  color: var(--theme-text-heading, var(--theme-text, #111827));
 }
 
 .venue-card {
@@ -36,7 +36,7 @@
 .venue-text {
   font-size: 1.125rem;
   line-height: 1.8;
-  color: #4b5563;
+  color: var(--theme-text-muted, #4b5563);
   margin-bottom: 1.5rem;
 }
 

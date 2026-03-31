@@ -19,7 +19,7 @@
   font-weight: 700;
   margin-bottom: 3rem;
   text-align: center;
-  color: var(--theme-text, #111827);
+  color: var(--theme-text-heading, var(--theme-text, #111827));
 }
 
 .timeline {
@@ -73,13 +73,13 @@
 }
 
 .timeline-location {
-  color: #6b7280;
+  color: var(--theme-text-muted, #6b7280);
   margin-bottom: 0.75rem;
   font-size: 0.9375rem;
 }
 
 .timeline-notes {
-  color: #4b5563;
+  color: var(--theme-text-muted, #4b5563);
   line-height: 1.6;
   margin: 0;
 }

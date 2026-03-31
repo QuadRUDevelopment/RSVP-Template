@@ -28,12 +28,12 @@
   font-weight: 700;
   margin-bottom: 0.5rem;
   text-align: center;
-  color: var(--theme-text, #111827);
+  color: var(--theme-text-heading, var(--theme-text, #111827));
 }
 
 .lookup-subtitle {
   text-align: center;
-  color: #6b7280;
+  color: var(--theme-text-muted, #6b7280);
   margin-bottom: 2rem;
 }
 
@@ -51,7 +51,7 @@
 
 .form-group label {
   font-weight: 500;
-  color: #374151;
+  color: var(--theme-text-muted, #374151);
 }
 
 .form-group input {
@@ -85,7 +85,7 @@
   font-weight: 700;
   margin-bottom: 2rem;
   text-align: center;
-  color: var(--theme-text, #111827);
+  color: var(--theme-text-heading, var(--theme-text, #111827));
 }
 
 /* Full-width single-column stack */
@@ -117,7 +117,7 @@
 }
 
 .accommodation-description {
-  color: #6b7280;
+  color: var(--theme-text-muted, #6b7280);
   line-height: 1.6;
   max-width: 520px;
 }
