@@ -609,7 +609,7 @@
 .additional-notes {
   font-size: 1rem;
   line-height: 1.7;
-  color: var(--theme-text-additional-notes, var(--theme-text, #374151));
+  color: var(--theme-text-rsvp, var(--theme-text-additional-notes, var(--theme-text, #374151)));
   margin-bottom: 1.25rem;
   text-align: center;
   padding: 0.875rem 1.25rem;
@@ -622,7 +622,7 @@
 .rsvp-content .invitation-text {
   font-size: 1.26rem; /* 1.05rem * 1.2 — 20% larger */
   line-height: 1.6;
-  color: var(--theme-text-invitation, var(--theme-text, #374151));
+  color: var(--theme-text-rsvp, var(--theme-text-invitation, var(--theme-text, #374151)));
   margin-bottom: 1.4rem;
   font-style: italic;
   text-align: center;
@@ -676,7 +676,7 @@
   border-radius: 0.5rem;
   font-size: 0.7rem; /* 1rem * 0.7 */
   line-height: 1.4; /* 1.6 * 0.7 ≈ 1.12, rounded to 1.4 */
-  color: var(--theme-text-muted, #4b5563);
+  color: var(--theme-text-rsvp, var(--theme-text-muted, #4b5563));
   font-style: italic;
 }
 

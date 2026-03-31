@@ -359,8 +359,8 @@ export const Settings: React.FC = () => {
                   },
                   {
                     key: 'rsvp',
-                    label: 'RSVP Page Text',
-                    desc: 'Labels and copy shown on the RSVP form page',
+                    label: 'RSVP Text',
+                    desc: 'Invitation text, additional notes, and copy in the RSVP section (home page + /rsvp page)',
                     default: '#111827',
                   },
                   {
