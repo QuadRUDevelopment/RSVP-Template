@@ -364,6 +364,12 @@ export const Settings: React.FC = () => {
                     default: '#111827',
                   },
                   {
+                    key: 'guestMessage',
+                    label: 'Guest Message Text',
+                    desc: 'The "Message for Guests" shown at the bottom of the home RSVP section',
+                    default: '#4b5563',
+                  },
+                  {
                     key: 'muted',
                     label: 'Muted / Secondary Text',
                     desc: 'Descriptions, captions, and helper text across all pages',
@@ -880,6 +886,7 @@ export const Settings: React.FC = () => {
                   placeholder="A personal message for your guests..."
                   rows={3}
                 />
+                <small>Displayed at the bottom of the RSVP section on the home page. Colour can be set in Appearance → Text Colors → Guest Message Text.</small>
               </div>
             </Card>
 

@@ -111,6 +111,7 @@ export function applyTheme(event: Event | null) {
   root.style.setProperty('--theme-text-invitation', theme.textInvitation);
   root.style.setProperty('--theme-text-additional-notes', theme.textAdditionalNotes);
   root.style.setProperty('--theme-text-rsvp', theme.textRsvp);
+  root.style.setProperty('--theme-text-guest-message', theme.textGuestMessage);
   root.style.setProperty('--theme-background', theme.background);
   root.style.setProperty('--theme-accent', theme.accent);
   root.style.setProperty('--theme-accent-rgb', hexToRgb(theme.accent));

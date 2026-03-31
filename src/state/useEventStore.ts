@@ -108,6 +108,7 @@ export const getThemeColors = (event: Event | null) => {
     textInvitation: tc.invitation || baseText,
     textAdditionalNotes: tc.additionalNotes || baseText,
     textRsvp: tc.rsvp || baseText,
+    textGuestMessage: tc.guestMessage || '#4b5563',
   };
 };
 
